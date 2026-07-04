@@ -70,7 +70,7 @@ const quickLinks = [
     </div>
 
     <!-- Family cards -->
-    <h2 class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4">{{ t('learn.families') || 'Familias' }}</h2>
+    <h2 class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4">{{ t('table.families') }}</h2>
     <div class="grid gap-3 sm:grid-cols-2">
       <div v-for="(lesson, i) in lessons" :key="lesson!.id" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="300" :delay="200 + i * 50" @click="router.push('/table?family=' + lesson!.id)" class="p-4 rounded-xl border cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] active:scale-[0.98]" :style="{ borderColor: lesson!.color + '40', backgroundColor: lesson!.color + '08' }">
         <div class="flex items-center justify-between mb-2">

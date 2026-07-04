@@ -10,8 +10,14 @@ const { progress, addXp, addCorrect, addIncorrect, addGamePlayed } = useProgress
 const { t, locale } = useI18n()
 
 const allElements = getAll()
-type GameMode = 'quiz' | 'memory' | 'speed'
-const activeMode = ref<GameMode>('quiz')
+type GameMode = 'quiz' | 'memory' | 'speed' | null
+const activeMode = ref<GameMode>(null)
+
+const gamesList = [
+  { id: 'quiz' as const, icon: '🤔', title: 'Adivina el elemento', desc: '10 preguntas con pistas y XP por racha', gradient: 'from-amber-500 to-orange-500', color: 'amber' },
+  { id: 'memory' as const, icon: '🧠', title: 'Memoria', desc: 'Empareja símbolo ↔ nombre · 8 elementos', gradient: 'from-purple-500 to-violet-500', color: 'purple' },
+  { id: 'speed' as const, icon: '⚡', title: 'Contrarreloj', desc: '60 segundos · responde lo más rápido posible', gradient: 'from-red-500 to-rose-500', color: 'red' },
+]
 
 // ----- GUESS THE ELEMENT (Quiz) -----
 const currentElement = ref<ElementData | null>(null)
@@ -213,20 +219,30 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
 
 <template>
   <div class="max-w-2xl mx-auto px-4 py-8">
-    <div class="text-center mb-6" v-motion :initial="{ y: -10, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="300">
-      <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t('games.title') }}</h1>
-      <p class="text-sm text-slate-500">{{ t('games.subtitle') }}</p>
-    </div>
-
-    <!-- Mode tabs -->
-    <div class="flex justify-center gap-1 mb-8 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 max-w-sm mx-auto">
-      <button @click="activeMode = 'quiz'" :class="['flex-1 py-2 text-xs font-medium rounded-lg transition-all', activeMode === 'quiz' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300']">Adivinar</button>
-      <button @click="activeMode = 'memory'" :class="['flex-1 py-2 text-xs font-medium rounded-lg transition-all', activeMode === 'memory' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300']">Memoria</button>
-      <button @click="activeMode = 'speed'" :class="['flex-1 py-2 text-xs font-medium rounded-lg transition-all', activeMode === 'speed' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300']">{{ t('games.speedQuiz') || 'Rápido' }}</button>
+    <!-- Card grid when no game selected -->
+    <div v-if="!activeMode" v-motion :initial="{ y: 10, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="300">
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t('games.title') }}</h1>
+        <p class="text-sm text-slate-500">{{ t('games.subtitle') }}</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <button v-for="(g, i) in gamesList" :key="g.id" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="100 + i * 80" @click="activeMode = g.id" class="group relative overflow-hidden p-6 rounded-2xl text-left text-white transition-all hover:shadow-xl hover:scale-[1.03] active:scale-[0.97] bg-gradient-to-br" :class="g.gradient">
+          <div class="relative z-10">
+            <div class="text-4xl mb-3">{{ g.icon }}</div>
+            <h2 class="text-lg font-bold mb-1">{{ g.id === 'speed' ? (t('games.speedQuiz') || g.title) : g.title }}</h2>
+            <p class="text-xs text-white/80">{{ g.desc }}</p>
+          </div>
+          <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+        </button>
+      </div>
     </div>
 
     <!-- ===== QUIZ MODE ===== -->
-    <div v-if="activeMode === 'quiz'">
+    <template v-else-if="activeMode === 'quiz'">
+      <button @click="activeMode = null" class="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors mb-4">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+        {{ t('games.backToGames') || 'Volver a juegos' }}
+      </button>
       <div v-if="!gameStarted" class="text-center py-12" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }">
         <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-6">
           <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -294,10 +310,14 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
           {{ totalQuestions >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}
         </button>
       </div>
-    </div>
+    </template>
 
     <!-- ===== MEMORY MODE ===== -->
-    <div v-if="activeMode === 'memory'">
+    <template v-else-if="activeMode === 'memory'">
+      <button @click="activeMode = null" class="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors mb-4">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+        {{ t('games.backToGames') || 'Volver a juegos' }}
+      </button>
       <div v-if="!memoryStarted" class="text-center py-12" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }">
         <div class="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-6">
           <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
@@ -328,10 +348,14 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
       <div v-if="memoryStarted && !memoryWon" class="text-center mt-4">
         <p class="text-xs text-slate-400">{{ memoryMoves }} movimientos · {{ memoryMatched }}/8 pares</p>
       </div>
-    </div>
+    </template>
 
     <!-- ===== SPEED MODE ===== -->
-    <div v-if="activeMode === 'speed'">
+    <template v-else>
+      <button @click="activeMode = null" class="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors mb-4">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+        {{ t('games.backToGames') || 'Volver a juegos' }}
+      </button>
       <div v-if="!speedRunning && !speedDone" class="text-center py-12" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }">
         <div class="w-16 h-16 rounded-2xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-6">
           <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -380,6 +404,6 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
           </button>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
