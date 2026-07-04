@@ -35,8 +35,23 @@ const xpToNext = computed(() => 500 - (progress.value.totalXp % 500))
       <p class="text-lg text-slate-500 dark:text-slate-400 max-w-md mx-auto" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="500" :delay="100">{{ t('app.subtitle') }}</p>
     </div>
 
+    <!-- Big CTA -->
+    <div v-motion :initial="{ scale: 0.9, opacity: 0 }" :visible="{ scale: 1, opacity: 1 }" :duration="500" :delay="100" class="mb-8">
+      <button @click="router.push('/table')" class="w-full group relative overflow-hidden p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-mint-400 to-emerald-500 dark:from-mint-500 dark:to-emerald-600 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]">
+        <div class="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <span class="text-5xl">🧪</span>
+          <div class="text-center sm:text-left">
+            <p class="text-2xl sm:text-3xl font-bold">{{ locale === 'es' ? '¡Vamos a la tabla periódica!' : 'Let\'s go to the periodic table!' }}</p>
+            <p class="text-sm text-white/80 mt-1">{{ locale === 'es' ? 'Explora 118 elementos, sus propiedades y curiosidades' : 'Explore 118 elements, their properties and curiosities' }}</p>
+          </div>
+          <svg class="w-8 h-8 text-white/60 shrink-0 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+      </button>
+    </div>
+
     <div class="grid gap-4 sm:grid-cols-3 mb-10">
-      <button v-motion :initial="{ y: 30, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="100" @click="router.push('/table')" class="group relative overflow-hidden p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/40 dark:to-blue-900/20 border border-blue-200/50 dark:border-blue-800/30 text-left transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+      <button v-motion :initial="{ y: 30, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="200" @click="router.push('/table')" class="group relative overflow-hidden p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/40 dark:to-blue-900/20 border border-blue-200/50 dark:border-blue-800/30 text-left transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
         <div class="relative z-10">
           <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
           <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-1">{{ t('app.explore') }}</h2>
@@ -44,7 +59,7 @@ const xpToNext = computed(() => 500 - (progress.value.totalXp % 500))
         </div>
       </button>
 
-      <button v-motion :initial="{ y: 30, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="200" @click="router.push('/learn')" class="group relative overflow-hidden p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-mint-50 to-mint-100 dark:from-mint-950/40 dark:to-mint-900/20 border border-mint-200/50 dark:border-mint-800/30 text-left transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+      <button v-motion :initial="{ y: 30, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="300" @click="router.push('/learn')" class="group relative overflow-hidden p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-mint-50 to-mint-100 dark:from-mint-950/40 dark:to-mint-900/20 border border-mint-200/50 dark:border-mint-800/30 text-left transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
         <div class="relative z-10">
           <div class="w-12 h-12 rounded-xl bg-mint-500/10 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-mint-600 dark:text-mint-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
           <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-1">{{ t('app.learn') }}</h2>
@@ -52,7 +67,7 @@ const xpToNext = computed(() => 500 - (progress.value.totalXp % 500))
         </div>
       </button>
 
-      <button v-motion :initial="{ y: 30, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="300" @click="router.push('/games')" class="group relative overflow-hidden p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/40 dark:to-amber-900/20 border border-amber-200/50 dark:border-amber-800/30 text-left transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+      <button v-motion :initial="{ y: 30, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="400" @click="router.push('/games')" class="group relative overflow-hidden p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/40 dark:to-amber-900/20 border border-amber-200/50 dark:border-amber-800/30 text-left transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
         <div class="relative z-10">
           <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
           <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-1">{{ t('app.play') }}</h2>

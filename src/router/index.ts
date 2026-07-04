@@ -38,6 +38,21 @@ const router = createRouter({
       path: '/lab',
       name: 'lab',
       component: () => import('@/pages/LabPage.vue')
+    },
+    {
+      path: '/flashcards',
+      name: 'flashcards',
+      component: () => import('@/pages/FlashcardsPage.vue')
+    },
+    {
+      path: '/compare',
+      name: 'compare',
+      component: () => import('@/pages/ComparePage.vue')
+    },
+    {
+      path: '/guide',
+      name: 'guide',
+      component: () => import('@/pages/GuidePage.vue')
     }
   ]
 })

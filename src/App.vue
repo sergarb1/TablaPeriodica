@@ -9,6 +9,7 @@ const navLinks = [
   { to: '/table', label: 'app.explore' },
   { to: '/learn', label: 'app.learn' },
   { to: '/games', label: 'app.play' },
+  { to: '/guide', label: 'app.guide' },
   { to: '/progress', label: 'app.progress' },
 ]
 </script>
@@ -52,6 +53,23 @@ const navLinks = [
         </transition>
       </router-view>
     </main>
+
+    <footer class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 py-4">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+        <div class="flex flex-wrap items-center justify-center gap-3 text-emerald-600 dark:text-emerald-400 font-medium">
+          <span>✅ 100% gratuita</span>
+          <span>🔒 Tus datos no salen de este dispositivo</span>
+          <span>📖 Licencias libres</span>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-2 text-slate-400 dark:text-slate-500">
+          <span>© {{ new Date().getFullYear() }} Química Visual — Sergi García Barea</span>
+          <div class="flex items-center gap-3">
+            <a href="https://github.com/sergarb1/TablaPeriodica/blob/main/LICENSE" target="_blank" rel="noopener" class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors underline">AGPL v3</a>
+            <a href="https://github.com/sergarb1/TablaPeriodica/blob/main/LICENSE-CONTENT" target="_blank" rel="noopener" class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors underline">CC BY-SA 4.0</a>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
