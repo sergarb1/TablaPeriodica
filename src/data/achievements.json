@@ -1,0 +1,144 @@
+[
+  {
+    "id": "first_element",
+    "nameEs": "Primer elemento",
+    "nameEn": "First element",
+    "descriptionEs": "Estudia tu primer elemento",
+    "descriptionEn": "Study your first element",
+    "icon": "star",
+    "condition": "elements",
+    "conditionValue": 1
+  },
+  {
+    "id": "ten_elements",
+    "nameEs": "Aprendiz",
+    "nameEn": "Apprentice",
+    "descriptionEs": "Estudia 10 elementos diferentes",
+    "descriptionEn": "Study 10 different elements",
+    "icon": "book",
+    "condition": "elements",
+    "conditionValue": 10
+  },
+  {
+    "id": "fifty_elements",
+    "nameEs": "Químico en prácticas",
+    "nameEn": "Chemist in training",
+    "descriptionEs": "Estudia 50 elementos diferentes",
+    "descriptionEn": "Study 50 different elements",
+    "icon": "flask",
+    "condition": "elements",
+    "conditionValue": 50
+  },
+  {
+    "id": "complete_table",
+    "nameEs": "Completista",
+    "nameEn": "Completionist",
+    "descriptionEs": "Estudia todos los 118 elementos",
+    "descriptionEn": "Study all 118 elements",
+    "icon": "trophy",
+    "condition": "complete_table",
+    "conditionValue": 118
+  },
+  {
+    "id": "all_alkali",
+    "nameEs": "Héroe de los alcalinos",
+    "nameEn": "Alkali hero",
+    "descriptionEs": "Estudia todos los metales alcalinos",
+    "descriptionEn": "Study all alkali metals",
+    "icon": "lightning",
+    "condition": "family_complete",
+    "conditionValue": 6,
+    "familyId": "alkali_metal"
+  },
+  {
+    "id": "all_noble",
+    "nameEs": "Maestro de los gases nobles",
+    "nameEn": "Noble gas master",
+    "descriptionEs": "Estudia todos los gases nobles",
+    "descriptionEn": "Study all noble gases",
+    "icon": "crown",
+    "condition": "family_complete",
+    "conditionValue": 7,
+    "familyId": "noble_gas"
+  },
+  {
+    "id": "streak_7",
+    "nameEs": "Constante",
+    "nameEn": "Consistent",
+    "descriptionEs": "Mantén una racha de 7 días",
+    "descriptionEn": "Maintain a 7-day streak",
+    "icon": "fire",
+    "condition": "days_streak",
+    "conditionValue": 7
+  },
+  {
+    "id": "streak_30",
+    "nameEs": "Imparable",
+    "nameEn": "Unstoppable",
+    "descriptionEs": "Mantén una racha de 30 días",
+    "descriptionEn": "Maintain a 30-day streak",
+    "icon": "inferno",
+    "condition": "days_streak",
+    "conditionValue": 30
+  },
+  {
+    "id": "quiz_10_streak",
+    "nameEs": "En racha",
+    "nameEn": "On a roll",
+    "descriptionEs": "Acierta 10 preguntas seguidas",
+    "descriptionEn": "Answer 10 questions in a row correctly",
+    "icon": "target",
+    "condition": "quiz_streak",
+    "conditionValue": 10
+  },
+  {
+    "id": "quiz_50_streak",
+    "nameEs": "Cienciólogo",
+    "nameEn": "Scientist",
+    "descriptionEs": "Acierta 50 preguntas seguidas",
+    "descriptionEn": "Answer 50 questions in a row correctly",
+    "icon": "brain",
+    "condition": "quiz_streak",
+    "conditionValue": 50
+  },
+  {
+    "id": "xp_1000",
+    "nameEs": "Novato experimentado",
+    "nameEn": "Experienced novice",
+    "descriptionEs": "Alcanza 1000 XP",
+    "descriptionEn": "Reach 1000 XP",
+    "icon": "level_up",
+    "condition": "total_xp",
+    "conditionValue": 1000
+  },
+  {
+    "id": "xp_10000",
+    "nameEs": "Leyenda",
+    "nameEn": "Legend",
+    "descriptionEs": "Alcanza 10000 XP",
+    "descriptionEn": "Reach 10000 XP",
+    "icon": "legend",
+    "condition": "total_xp",
+    "conditionValue": 10000
+  },
+  {
+    "id": "games_10",
+    "nameEs": "Jugador",
+    "nameEn": "Player",
+    "descriptionEs": "Juega 10 partidas",
+    "descriptionEn": "Play 10 games",
+    "icon": "gamepad",
+    "condition": "games_won",
+    "conditionValue": 10
+  },
+  {
+    "id": "games_50",
+    "nameEs": "Campeón",
+    "nameEn": "Champion",
+    "descriptionEs": "Juega 50 partidas",
+    "descriptionEn": "Play 50 games",
+    "icon": "champion",
+    "condition": "games_won",
+    "conditionValue": 50
+  }
+]

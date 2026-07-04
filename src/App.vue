@@ -1,0 +1,65 @@
+<script setup lang="ts">
+import { useTheme } from '@/composables/useTheme'
+import { useLocale } from '@/composables/useLocale'
+
+const { isDark, toggle } = useTheme()
+const { setLocale, currentLocale } = useLocale()
+
+const navLinks = [
+  { to: '/table', label: 'app.explore' },
+  { to: '/learn', label: 'app.learn' },
+  { to: '/games', label: 'app.play' },
+  { to: '/progress', label: 'app.progress' },
+]
+</script>
+
+<template>
+  <div class="min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+        <router-link to="/" class="flex items-center gap-2 font-display font-bold text-lg text-slate-900 dark:text-white shrink-0">
+          <svg class="w-6 h-6 text-mint-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="6"/>
+            <circle cx="12" cy="12" r="2"/>
+          </svg>
+          <span class="hidden sm:inline">Química Visual</span>
+        </router-link>
+
+        <nav class="flex items-center gap-1">
+          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            {{ $t(link.label) }}
+          </router-link>
+        </nav>
+
+        <div class="flex items-center gap-1 shrink-0">
+          <button @click="toggle" class="p-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" :title="isDark ? 'Light mode' : 'Dark mode'">
+            <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+          <div class="flex items-center gap-0.5 border-l border-slate-200 dark:border-slate-700 ml-1 pl-2">
+            <button @click="setLocale('es')" :class="['px-2 py-1 text-xs rounded font-medium transition-colors', currentLocale === 'es' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']">ES</button>
+            <button @click="setLocale('en')" :class="['px-2 py-1 text-xs rounded font-medium transition-colors', currentLocale === 'en' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']">EN</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </main>
+  </div>
+</template>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
