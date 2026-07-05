@@ -64,6 +64,15 @@
       transition-duration: 0.01ms !important;
     }
   }
+
+  /* Keyboard focus indicator */
+  :focus-visible {
+    outline: 2px solid var(--color-mint-500);
+    outline-offset: 2px;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 @layer utilities {

@@ -294,7 +294,11 @@
     "details": "Detalles",
     "close": "Cerrar",
     "clickForMore": "Click para más información",
-    "backToTop": "Volver arriba"
+    "backToTop": "Volver arriba",
+    "skipToContent": "Saltar al contenido principal",
+    "mainNav": "Navegación principal",
+    "menu": "Menú",
+    "languageSelect": "Seleccionar idioma"
   },
   "trends": {
     "title": "Tendencias Periódicas 🔥",

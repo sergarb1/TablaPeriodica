@@ -294,7 +294,11 @@
     "details": "Details",
     "close": "Close",
     "clickForMore": "Click for more info",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "skipToContent": "Skip to main content",
+    "mainNav": "Main navigation",
+    "menu": "Menu",
+    "languageSelect": "Select language"
   },
   "trends": {
     "title": "Periodic Trends 🔥",
