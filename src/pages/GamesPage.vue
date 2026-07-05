@@ -241,7 +241,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
     <template v-else-if="activeMode === 'quiz'">
       <button @click="activeMode = null" class="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors mb-4">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-        {{ t('games.backToGames') || 'Volver a juegos' }}
+        {{ t('games.backToGames') }}
       </button>
       <div v-if="!gameStarted" class="text-center py-12" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }">
         <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-6">
@@ -316,13 +316,13 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
     <template v-else-if="activeMode === 'memory'">
       <button @click="activeMode = null" class="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors mb-4">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-        {{ t('games.backToGames') || 'Volver a juegos' }}
+        {{ t('games.backToGames') }}
       </button>
       <div v-if="!memoryStarted" class="text-center py-12" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }">
         <div class="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-6">
           <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
         </div>
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.memoryGame') || 'Memory: symbol ↔ name' }}</h2>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.memoryGame') }}</h2>
         <p class="text-sm text-slate-400 mb-6">Empareja cada símbolo con su nombre · Primeros 8 elementos</p>
         <button @click="startMemory" class="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold hover:shadow-lg transition-all">Comenzar</button>
       </div>
@@ -331,7 +331,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
         <div class="w-20 h-20 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-6">
           <svg class="w-10 h-10 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.youWon') || '¡Completado!' }}</h2>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.youWon') }}</h2>
         <p class="text-sm text-slate-400 mb-4">{{ memoryMoves }} movimientos</p>
         <button @click="startMemory" class="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
       </div>
@@ -354,13 +354,13 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
     <template v-else>
       <button @click="activeMode = null" class="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors mb-4">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-        {{ t('games.backToGames') || 'Volver a juegos' }}
+        {{ t('games.backToGames') }}
       </button>
       <div v-if="!speedRunning && !speedDone" class="text-center py-12" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }">
         <div class="w-16 h-16 rounded-2xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-6">
           <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.speedQuiz') || 'Speed Quiz' }}</h2>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.speedQuiz') }}</h2>
         <p class="text-sm text-slate-400 mb-6">60 segundos · ¡responde rápido!</p>
         <button @click="startSpeed" class="px-8 py-3 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold hover:shadow-lg transition-all">Comenzar</button>
       </div>
@@ -369,7 +369,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
         <div class="w-20 h-20 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-6">
           <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">{{ t('games.timeUp') || '¡Tiempo!' }}</h2>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">{{ t('games.timeUp') }}</h2>
         <div class="flex justify-center gap-6 mb-6">
           <div><p class="text-2xl font-bold text-mint-500">{{ speedCorrect }}/{{ speedTotal }}</p><p class="text-xs text-slate-500">{{ t('learn.correct') }}</p></div>
           <div><p class="text-2xl font-bold text-amber-500">{{ speedScore }}</p><p class="text-xs text-slate-500">Pts</p></div>

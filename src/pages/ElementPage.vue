@@ -58,7 +58,8 @@ const risks = computed(() => {
 </script>
 
 <template>
-  <div v-if="element" class="max-w-4xl mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <template v-if="element">
     <button @click="router.back()" class="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 mb-6 transition-colors">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
       {{ t('app.back') }}
@@ -171,5 +172,12 @@ const risks = computed(() => {
         </div>
       </div>
     </div>
+    </template>
+    <template v-else>
+      <div class="py-20 text-center">
+        <p class="text-slate-400 text-lg">{{ t('element.notFound') || 'Element not found' }}</p>
+        <router-link to="/table" class="inline-block mt-4 px-6 py-2 rounded-xl bg-mint-500 text-white text-sm">{{ t('app.back') }}</router-link>
+      </div>
+    </template>
   </div>
 </template>

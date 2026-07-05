@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Química Visual",
-    "subtitle": "Learn the periodic table visually and interactively",
+    "subtitle": "Interactive Periodic Table",
     "explore": "Explore",
     "learn": "Learn",
     "play": "Play",
@@ -145,7 +145,13 @@
     "timeRemaining": "Time remaining",
     "pairsFound": "Pairs found",
     "newGame": "New game",
-    "correctAnswers": "Correct answers"
+    "correctAnswers": "Correct answers",
+    "backToGames": "Back to games",
+    "memoryGame": "Memory: symbol ↔ name",
+    "youWon": "Completed!",
+    "speedQuiz": "Speed Quiz",
+    "timeUp": "Time's up!",
+    "streak": "Streak"
   },
   "progress": {
     "title": "Your progress",

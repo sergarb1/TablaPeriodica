@@ -13,9 +13,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/*.svg'],
       manifest: {
-        name: 'Química Visual',
+        name: 'Química Visual — Tabla Periódica Interactiva',
         short_name: 'Química Visual',
-        description: 'Aprende la tabla periódica de forma visual e interactiva',
+        description: 'Aprende química de forma visual, bilingüe y gratuita. 118 elementos, juegos, flashcards y guía educativa.',
         theme_color: '#0f172a',
         background_color: '#ffffff',
         display: 'standalone',

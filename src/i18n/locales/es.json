@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Química Visual",
-    "subtitle": "Aprende la tabla periódica de forma visual e interactiva",
+    "subtitle": "Tabla Periódica Interactiva",
     "explore": "Explorar",
     "learn": "Aprender",
     "play": "Jugar",
@@ -145,7 +145,13 @@
     "timeRemaining": "Tiempo restante",
     "pairsFound": "Pares encontrados",
     "newGame": "Nueva partida",
-    "correctAnswers": "Aciertos"
+    "correctAnswers": "Aciertos",
+    "backToGames": "Volver a juegos",
+    "memoryGame": "Memoria: símbolo ↔ nombre",
+    "youWon": "¡Completado!",
+    "speedQuiz": "Contrarreloj",
+    "timeUp": "¡Tiempo!",
+    "streak": "Racha"
   },
   "progress": {
     "title": "Tu progreso",

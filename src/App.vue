@@ -18,14 +18,17 @@ const navLinks = [
   <div class="min-h-screen flex flex-col">
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
       <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
-        <router-link to="/" class="flex items-center gap-2 font-display font-bold text-lg text-slate-900 dark:text-white shrink-0">
-          <svg class="w-6 h-6 text-mint-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <circle cx="12" cy="12" r="6"/>
-            <circle cx="12" cy="12" r="2"/>
-          </svg>
-          <span class="hidden sm:inline">Química Visual</span>
-        </router-link>
+          <router-link to="/" class="flex items-center gap-2 font-display font-bold shrink-0">
+            <svg class="w-6 h-6 text-mint-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>
+            <div class="hidden sm:block leading-tight">
+              <span class="text-lg text-slate-900 dark:text-white">Química Visual</span>
+              <span class="block text-[0.6rem] text-slate-400 dark:text-slate-500 font-normal tracking-wider uppercase">Tabla Periódica Interactiva</span>
+            </div>
+          </router-link>
 
         <nav class="flex items-center gap-1">
           <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -62,7 +65,7 @@ const navLinks = [
           <span>📖 Licencias libres</span>
         </div>
         <div class="flex flex-col sm:flex-row items-center gap-2 text-slate-400 dark:text-slate-500">
-          <span>© {{ new Date().getFullYear() }} Química Visual — Sergi García Barea</span>
+          <span>© {{ new Date().getFullYear() }} Química Visual — Tabla Periódica Interactiva — Sergi García Barea</span>
           <div class="flex items-center gap-3">
             <a href="https://github.com/sergarb1/TablaPeriodica/blob/main/LICENSE" target="_blank" rel="noopener" class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors underline">AGPL v3</a>
             <a href="https://github.com/sergarb1/TablaPeriodica/blob/main/LICENSE-CONTENT" target="_blank" rel="noopener" class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors underline">CC BY-SA 4.0</a>
