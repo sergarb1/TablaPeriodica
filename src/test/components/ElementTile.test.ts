@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
 import ElementTile from '@/components/ElementTile.vue'
+import { createI18n } from 'vue-i18n'
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: { en: {}, es: {} }
+})
 
 const mockElement = {
   atomicNumber: 6,
@@ -44,62 +50,81 @@ const mockElement = {
   risksEn: 'Soot and coal dust can be carcinogenic.',
 }
 
+function mountTile(props = {}) {
+  return mount(ElementTile, {
+    props: { element: mockElement, ...props },
+    global: { plugins: [i18n] }
+  })
+}
+
 describe('ElementTile.vue', () => {
   it('renders the symbol', () => {
-    const wrapper = mount(ElementTile, {
-      props: { element: mockElement }
-    })
+    const wrapper = mountTile()
     expect(wrapper.text()).toContain('C')
   })
 
   it('renders the atomic number', () => {
-    const wrapper = mount(ElementTile, {
-      props: { element: mockElement }
-    })
+    const wrapper = mountTile()
     expect(wrapper.text()).toContain('6')
   })
 
+  it('has an aria-label with element info', () => {
+    const wrapper = mountTile()
+    const btn = wrapper.find('button')
+    expect(btn.attributes('aria-label')).toContain('Carbon')
+    expect(btn.attributes('aria-label')).toContain('Z=6')
+  })
+
   it('applies default md size classes', () => {
-    const wrapper = mount(ElementTile, {
-      props: { element: mockElement }
-    })
+    const wrapper = mountTile()
     const btn = wrapper.find('button')
     expect(btn.classes()).toContain('w-12')
     expect(btn.classes()).toContain('h-12')
   })
 
   it('applies sm size classes when size="sm"', () => {
-    const wrapper = mount(ElementTile, {
-      props: { element: mockElement, size: 'sm' }
-    })
+    const wrapper = mountTile({ size: 'sm' })
     const btn = wrapper.find('button')
     expect(btn.classes()).toContain('w-11')
     expect(btn.classes()).toContain('h-11')
   })
 
   it('applies lg size classes when size="lg"', () => {
-    const wrapper = mount(ElementTile, {
-      props: { element: mockElement, size: 'lg' }
-    })
+    const wrapper = mountTile({ size: 'lg' })
     const btn = wrapper.find('button')
     expect(btn.classes()).toContain('w-14')
     expect(btn.classes()).toContain('h-14')
   })
 
   it('emits click with atomic number on click', async () => {
-    const wrapper = mount(ElementTile, {
-      props: { element: mockElement }
-    })
+    const wrapper = mountTile()
     await wrapper.find('button').trigger('click')
     expect(wrapper.emitted('click')).toBeTruthy()
     expect(wrapper.emitted('click')![0]).toEqual([6])
   })
 
-  it('renders with trend styles when trendValue is provided', () => {
-    const wrapper = mount(ElementTile, {
-      props: { element: mockElement, trendValue: 50, trendMax: 100 }
-    })
+  it('emits hover with element and event on mouseenter', async () => {
+    const wrapper = mountTile()
+    await wrapper.find('button').trigger('mouseenter')
+    expect(wrapper.emitted('hover')).toBeTruthy()
+    expect(wrapper.emitted('hover')![0][0].atomicNumber).toBe(6)
+  })
+
+  it('emits leave on mouseleave', async () => {
+    const wrapper = mountTile()
+    await wrapper.find('button').trigger('mouseleave')
+    expect(wrapper.emitted('leave')).toBeTruthy()
+  })
+
+  it('respects familyColor prop', () => {
+    const wrapper = mountTile({ familyColor: '#FF0000' })
     const btn = wrapper.find('button')
-    expect(btn.attributes('style')).toBeTruthy()
+    expect(btn.attributes('style')).toContain('#FF0000')
+  })
+
+  it('does not animate when noAnim=true', () => {
+    const wrapper = mountTile({ noAnim: true })
+    const btn = wrapper.find('button')
+    expect(btn.classes()).toContain('opacity-100')
   })
 })

@@ -16,12 +16,18 @@
     "study": "Estudiar"
   },
   "home": {
+    "ctaTitle": "¡Vamos a la tabla periódica!",
+    "ctaSubtitle": "Explora 118 elementos, sus propiedades y curiosidades",
     "exploreDesc": "Navega por la tabla periódica interactiva",
     "learnDesc": "Sigue la ruta de estudio guiada",
     "playDesc": "Pon a prueba lo que has aprendido",
     "dailyElement": "Elemento del día",
     "streak": "Racha",
-    "days": "días"
+    "days": "días",
+    "level": "Nivel",
+    "xpToNext": "XP para el siguiente nivel",
+    "elements": "elementos",
+    "elementsCount": "118 elementos"
   },
   "table": {
     "legend": "Leyenda",
@@ -44,7 +50,32 @@
     "trendIonization": "Energía de ionización",
     "trendDensity": "Densidad",
     "trendMeltingPoint": "Punto de fusión",
-    "noTrend": "Familia"
+    "noTrend": "Familia",
+    "config": "Configuración",
+    "fullscreen": "Pantalla completa",
+    "exitFullscreen": "Salir de pantalla completa",
+    "tileSize": "Tamaño",
+    "tileCompact": "Compacto",
+    "tileNormal": "Normal",
+    "tileComfortable": "Cómodo",
+    "tileLarge": "Grande",
+    "labelMode": "Etiqueta",
+    "labelSymbol": "Símbolo",
+    "labelName": "Nombre",
+    "labelBoth": "Ambos",
+    "colorTheme": "Tema de color",
+    "themeNormal": "Normal",
+    "themeHighContrast": "Alto contraste",
+    "themeDeuteranopia": "Daltonismo",
+    "themeMonochrome": "Blanco y negro",
+    "fblockMode": "Bloque f",
+    "fblockBottom": "Abajo",
+    "fblockHidden": "Oculto",
+    "fblockInline": "Integrado",
+    "animations": "Animaciones",
+    "showAtomicNumber": "Nº atómico",
+    "zoom": "Zoom",
+    "hoverInfo": "Info al pasar"
   },
   "flashcards": {
     "title": "Flashcards",
@@ -232,6 +263,8 @@
     "english": "English",
     "ok": "Aceptar",
     "cancel": "Cancelar",
-    "close": "Cerrar"
+    "details": "Detalles",
+    "close": "Cerrar",
+    "backToTop": "Volver arriba"
   }
 }

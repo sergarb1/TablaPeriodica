@@ -16,12 +16,18 @@
     "study": "Study"
   },
   "home": {
+    "ctaTitle": "Let's go to the periodic table!",
+    "ctaSubtitle": "Explore 118 elements, their properties and curiosities",
     "exploreDesc": "Navigate the interactive periodic table",
     "learnDesc": "Follow the guided learning path",
     "playDesc": "Test what you've learned",
     "dailyElement": "Element of the Day",
     "streak": "Streak",
-    "days": "days"
+    "days": "days",
+    "level": "Level",
+    "xpToNext": "XP to next level",
+    "elements": "elements",
+    "elementsCount": "118 elements"
   },
   "table": {
     "legend": "Legend",
@@ -44,7 +50,32 @@
     "trendIonization": "Ionization energy",
     "trendDensity": "Density",
     "trendMeltingPoint": "Melting point",
-    "noTrend": "Family"
+    "noTrend": "Family",
+    "config": "Settings",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen",
+    "tileSize": "Size",
+    "tileCompact": "Compact",
+    "tileNormal": "Normal",
+    "tileComfortable": "Comfortable",
+    "tileLarge": "Large",
+    "labelMode": "Label",
+    "labelSymbol": "Symbol",
+    "labelName": "Name",
+    "labelBoth": "Both",
+    "colorTheme": "Color theme",
+    "themeNormal": "Normal",
+    "themeHighContrast": "High contrast",
+    "themeDeuteranopia": "Deuteranopia",
+    "themeMonochrome": "Monochrome",
+    "fblockMode": "f-block",
+    "fblockBottom": "Bottom",
+    "fblockHidden": "Hidden",
+    "fblockInline": "Inline",
+    "animations": "Animations",
+    "showAtomicNumber": "Atomic #",
+    "zoom": "Zoom",
+    "hoverInfo": "Hover info"
   },
   "flashcards": {
     "title": "Flashcards",
@@ -232,6 +263,8 @@
     "english": "English",
     "ok": "OK",
     "cancel": "Cancel",
-    "close": "Close"
+    "details": "Details",
+    "close": "Close",
+    "backToTop": "Back to top"
   }
 }

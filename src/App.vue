@@ -16,7 +16,7 @@ const navLinks = [
 
 <template>
   <div class="min-h-screen flex flex-col">
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 fullscreen-hidden">
       <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
           <router-link to="/" class="flex items-center gap-2 font-display font-bold shrink-0">
             <svg class="w-6 h-6 text-mint-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -57,7 +57,7 @@ const navLinks = [
       </router-view>
     </main>
 
-    <footer class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 py-4">
+    <footer class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 py-4 fullscreen-hidden">
       <div class="max-w-7xl mx-auto px-4 flex flex-col items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
         <div class="flex flex-wrap items-center justify-center gap-3 text-emerald-600 dark:text-emerald-400 font-medium">
           <span>✅ 100% gratuita</span>
@@ -82,5 +82,11 @@ const navLinks = [
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+:global(.table-fullscreen) .fullscreen-hidden {
+  display: none !important;
+}
+:global(.table-fullscreen) main {
+  padding: 0;
 }
 </style>
