@@ -29,7 +29,7 @@ function trendBg(v: number | null | undefined, max: number): string {
     v-motion :initial="{ opacity: 0, scale: 0.6 }" :visible="{ opacity: 1, scale: 1 }" :duration="300"
     @click="emit('click', element.atomicNumber)"
     class="relative flex flex-col items-center justify-center overflow-hidden rounded-lg cursor-pointer select-none transition-all duration-200 hover:z-10 hover:scale-125 hover:shadow-xl active:scale-95 group bg-white/40 dark:bg-white/5 backdrop-blur-[1px]"
-    :class="[s === 'sm' ? 'w-10 h-10' : s === 'lg' ? 'w-14 h-14' : 'w-12 h-12']"
+    :class="[s === 'sm' ? 'w-11 h-11' : s === 'lg' ? 'w-14 h-14' : 'w-12 h-12']"
     :style="{
       border: '1px solid ' + element.color + '60',
       boxShadow: '0 0 6px ' + element.color + '20, inset 0 0 12px ' + element.color + '10',

@@ -69,7 +69,7 @@ function maxVal(key: keyof ElementData): number {
         <label class="block text-xs font-medium text-slate-400 dark:text-slate-500 mb-1">Element A</label>
         <input v-model="searchA" @focus="showDropdownA = true" @blur="blurA" placeholder="Search..." class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-mint-400">
         <div v-if="showDropdownA && resultsA.length" class="absolute z-20 top-full left-0 right-0 mt-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-lg max-h-60 overflow-y-auto">
-          <button v-for="el in resultsA" :key="el.atomicNumber" @click="selectA(el)" class="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-xs transition-colors">
+          <button v-for="el in resultsA" :key="el.atomicNumber" @click="selectA(el)" class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-xs transition-colors">
             <span class="font-mono font-bold text-slate-700 dark:text-slate-300 w-8">{{ el.symbol }}</span>
             <span class="text-slate-500 dark:text-slate-400">{{ locale === 'es' ? el.nameEs : el.nameEn }}</span>
             <span class="text-slate-400 ml-auto">{{ el.atomicNumber }}</span>
@@ -80,7 +80,7 @@ function maxVal(key: keyof ElementData): number {
         <label class="block text-xs font-medium text-slate-400 dark:text-slate-500 mb-1">Element B</label>
         <input v-model="searchB" @focus="showDropdownB = true" @blur="blurB" placeholder="Search..." class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-mint-400">
         <div v-if="showDropdownB && resultsB.length" class="absolute z-20 top-full left-0 right-0 mt-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-lg max-h-60 overflow-y-auto">
-          <button v-for="el in resultsB" :key="el.atomicNumber" @click="selectB(el)" class="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-xs transition-colors">
+          <button v-for="el in resultsB" :key="el.atomicNumber" @click="selectB(el)" class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-xs transition-colors">
             <span class="font-mono font-bold text-slate-700 dark:text-slate-300 w-8">{{ el.symbol }}</span>
             <span class="text-slate-500 dark:text-slate-400">{{ locale === 'es' ? el.nameEs : el.nameEn }}</span>
             <span class="text-slate-400 ml-auto">{{ el.atomicNumber }}</span>
@@ -91,26 +91,26 @@ function maxVal(key: keyof ElementData): number {
 
     <!-- Comparison table -->
     <div v-if="elA && elB" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400">
-      <div class="grid sm:grid-cols-3 gap-4 mb-6 text-center">
-        <div class="p-4 rounded-xl bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/30 dark:to-blue-900/20 border border-sky-200/50 dark:border-sky-800/30">
-          <div class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow flex items-center justify-center mx-auto mb-2">
-            <span class="text-2xl font-bold font-mono text-slate-800 dark:text-slate-200">{{ elA.symbol }}</span>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6 text-center items-start">
+        <div class="p-3 sm:p-4 rounded-xl bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/30 dark:to-blue-900/20 border border-sky-200/50 dark:border-sky-800/30">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-slate-800 shadow flex items-center justify-center mx-auto mb-1 sm:mb-2">
+            <span class="text-xl sm:text-2xl font-bold font-mono text-slate-800 dark:text-slate-200">{{ elA.symbol }}</span>
           </div>
-          <p class="font-semibold text-slate-900 dark:text-white text-sm">{{ searchA }}</p>
-          <p class="text-xs text-slate-400">{{ locale === 'es' ? elA.familyEs : elA.familyEn }}</p>
+          <p class="font-semibold text-slate-900 dark:text-white text-xs sm:text-sm truncate">{{ searchA }}</p>
+          <p class="text-[0.6rem] sm:text-xs text-slate-400 truncate">{{ locale === 'es' ? elA.familyEs : elA.familyEn }}</p>
         </div>
-        <div class="flex items-center justify-center"><span class="text-2xl text-slate-300">VS</span></div>
-        <div class="p-4 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-900/20 border border-rose-200/50 dark:border-rose-800/30">
-          <div class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow flex items-center justify-center mx-auto mb-2">
-            <span class="text-2xl font-bold font-mono text-slate-800 dark:text-slate-200">{{ elB.symbol }}</span>
+        <div class="flex items-center justify-center"><span class="text-base sm:text-2xl text-slate-300">VS</span></div>
+        <div class="p-3 sm:p-4 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-900/20 border border-rose-200/50 dark:border-rose-800/30">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-slate-800 shadow flex items-center justify-center mx-auto mb-1 sm:mb-2">
+            <span class="text-xl sm:text-2xl font-bold font-mono text-slate-800 dark:text-slate-200">{{ elB.symbol }}</span>
           </div>
-          <p class="font-semibold text-slate-900 dark:text-white text-sm">{{ searchB }}</p>
-          <p class="text-xs text-slate-400">{{ locale === 'es' ? elB.familyEs : elB.familyEn }}</p>
+          <p class="font-semibold text-slate-900 dark:text-white text-xs sm:text-sm truncate">{{ searchB }}</p>
+          <p class="text-[0.6rem] sm:text-xs text-slate-400 truncate">{{ locale === 'es' ? elB.familyEs : elB.familyEn }}</p>
         </div>
       </div>
 
       <div class="space-y-3">
-        <div v-for="p in properties" :key="String(p.key)" class="grid sm:grid-cols-3 items-center gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+        <div v-for="p in properties" :key="String(p.key)" class="grid grid-cols-3 items-center gap-1 sm:gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
           <div class="text-center">
             <span v-if="getVal(elA, p.key) !== null" class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ getVal(elA, p.key) }}{{ p.unit }}</span>
             <span v-else class="text-xs text-slate-400">—</span>

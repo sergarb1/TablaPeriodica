@@ -83,10 +83,10 @@ function openElement(n: number) {
     </div>
 
     <div class="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
-      <button @click="selectedFamily = null" :class="['px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors', !selectedFamily ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300']">
+      <button @click="selectedFamily = null" :class="['px-3 py-2.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors', !selectedFamily ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300']">
         {{ t('table.families') }}
       </button>
-      <button v-for="f in families" :key="f" @click="selectedFamily = f" :class="['px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors', selectedFamily === f ? 'text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300']" :style="selectedFamily === f ? { backgroundColor: getFamily(f)?.color } : {}">
+      <button v-for="f in families" :key="f" @click="selectedFamily = f" :class="['px-3 py-2.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors', selectedFamily === f ? 'text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300']" :style="selectedFamily === f ? { backgroundColor: getFamily(f)?.color } : {}">
         {{ t('table.' + FAMILY_LABEL[f]) }}
       </button>
     </div>

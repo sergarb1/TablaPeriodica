@@ -100,7 +100,7 @@ function name(el: ElementData) {
           <option value="">{{ t('learn.allFamilies') || 'All families' }}</option>
           <option v-for="f in families" :key="f" :value="f">{{ f === 'nonmetal' ? (locale === 'es' ? 'No metal' : 'Nonmetal') : f.replace(/_/g, ' ') }}</option>
         </select>
-        <button @click="shuffle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" title="Shuffle">
+        <button @click="shuffle" class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" title="Shuffle">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         </button>
       </div>
@@ -134,16 +134,16 @@ function name(el: ElementData) {
       </div>
 
       <div class="flex items-center justify-center gap-4 mb-6">
-        <button @click="prev" :disabled="currentIndex === 0" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors disabled:opacity-30">
+        <button @click="prev" :disabled="currentIndex === 0" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors disabled:opacity-30 min-w-[44px] min-h-[44px] flex items-center justify-center">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
         </button>
-        <button @click="markUnknown" class="p-3 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-500 hover:bg-red-200 dark:hover:bg-red-800/40 transition-colors" title="Don't know">
+        <button @click="markUnknown" class="p-3 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-500 hover:bg-red-200 dark:hover:bg-red-800/40 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" title="Don't know">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
-        <button @click="markKnown" class="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-500 hover:bg-emerald-200 dark:hover:bg-emerald-800/40 transition-colors" title="Know it">
+        <button @click="markKnown" class="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-500 hover:bg-emerald-200 dark:hover:bg-emerald-800/40 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" title="Know it">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
         </button>
-        <button @click="next" :disabled="currentIndex >= filteredElements.length - 1" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors disabled:opacity-30">
+        <button @click="next" :disabled="currentIndex >= filteredElements.length - 1" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors disabled:opacity-30 min-w-[44px] min-h-[44px] flex items-center justify-center">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>

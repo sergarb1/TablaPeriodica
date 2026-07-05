@@ -24,13 +24,13 @@ const navLinks = [
               <circle cx="12" cy="12" r="6"/>
               <circle cx="12" cy="12" r="2"/>
             </svg>
-            <div class="hidden sm:block leading-tight">
+            <div class="leading-tight">
               <span class="text-lg text-slate-900 dark:text-white">Química Visual</span>
-              <span class="block text-[0.6rem] text-slate-400 dark:text-slate-500 font-normal tracking-wider uppercase">Tabla Periódica Interactiva</span>
+              <span class="hidden sm:block text-[0.6rem] text-slate-400 dark:text-slate-500 font-normal tracking-wider uppercase">Tabla Periódica Interactiva</span>
             </div>
           </router-link>
 
-        <nav class="flex items-center gap-1">
+        <nav class="flex items-center gap-1 overflow-x-auto overflow-y-hidden">
           <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
             {{ $t(link.label) }}
           </router-link>
@@ -42,8 +42,8 @@ const navLinks = [
             <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
           </button>
           <div class="flex items-center gap-0.5 border-l border-slate-200 dark:border-slate-700 ml-1 pl-2">
-            <button @click="setLocale('es')" :class="['px-2 py-1 text-xs rounded font-medium transition-colors', currentLocale === 'es' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']">ES</button>
-            <button @click="setLocale('en')" :class="['px-2 py-1 text-xs rounded font-medium transition-colors', currentLocale === 'en' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']">EN</button>
+            <button @click="setLocale('es')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors', currentLocale === 'es' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']">ES</button>
+            <button @click="setLocale('en')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors', currentLocale === 'en' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']">EN</button>
           </div>
         </div>
       </div>

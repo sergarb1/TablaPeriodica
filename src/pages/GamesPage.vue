@@ -249,7 +249,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.guessElement') }}</h2>
         <p class="text-sm text-slate-400 mb-6">10 preguntas · XP por racha</p>
-        <button @click="startGame" class="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">Comenzar</button>
+        <button @click="startGame" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">Comenzar</button>
       </div>
 
       <div v-else-if="gameOver" class="text-center py-12" v-motion :initial="{ scale: 0.9, opacity: 0 }" :visible="{ scale: 1, opacity: 1 }">
@@ -262,7 +262,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
           <div><p class="text-2xl font-bold text-amber-500">{{ score }} XP</p><p class="text-xs text-slate-500">{{ t('games.score') }}</p></div>
           <div><p class="text-2xl font-bold text-purple-500">{{ bestStreak }}</p><p class="text-xs text-slate-500">{{ t('games.streak') }}</p></div>
         </div>
-        <button @click="startGame" class="px-8 py-3 rounded-xl bg-gradient-to-r from-mint-500 to-emerald-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
+        <button @click="startGame" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-mint-500 to-emerald-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
       </div>
 
       <div v-else v-motion :initial="{ opacity: 0 }" :visible="{ opacity: 1 }" :duration="300">
@@ -300,13 +300,13 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
               answered && opt.atomicNumber === selectedAnswer ? 'border-red-400 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300' :
               'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600',
               answered ? 'cursor-default' : 'cursor-pointer hover:shadow-sm active:scale-[0.99]']">
-            <span class="font-mono">{{ getOptionLabel(opt) }}</span>
+            <span class="font-mono text-sm sm:text-base">{{ getOptionLabel(opt) }}</span>
             <span v-if="answered && opt.atomicNumber === currentElement!.atomicNumber" class="float-right text-mint-500">✓</span>
             <span v-else-if="answered && opt.atomicNumber === selectedAnswer" class="float-right text-red-500">✗</span>
           </button>
         </div>
 
-        <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all">
+        <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all">
           {{ totalQuestions >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}
         </button>
       </div>
@@ -324,7 +324,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.memoryGame') }}</h2>
         <p class="text-sm text-slate-400 mb-6">Empareja cada símbolo con su nombre · Primeros 8 elementos</p>
-        <button @click="startMemory" class="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold hover:shadow-lg transition-all">Comenzar</button>
+        <button @click="startMemory" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold hover:shadow-lg transition-all">Comenzar</button>
       </div>
 
       <div v-else-if="memoryWon" class="text-center py-12" v-motion :initial="{ scale: 0.9, opacity: 0 }" :visible="{ scale: 1, opacity: 1 }">
@@ -333,7 +333,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.youWon') }}</h2>
         <p class="text-sm text-slate-400 mb-4">{{ memoryMoves }} movimientos</p>
-        <button @click="startMemory" class="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
+        <button @click="startMemory" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
       </div>
 
       <div v-else class="grid grid-cols-4 gap-2 max-w-sm mx-auto">
@@ -362,7 +362,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.speedQuiz') }}</h2>
         <p class="text-sm text-slate-400 mb-6">60 segundos · ¡responde rápido!</p>
-        <button @click="startSpeed" class="px-8 py-3 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold hover:shadow-lg transition-all">Comenzar</button>
+        <button @click="startSpeed" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold hover:shadow-lg transition-all">Comenzar</button>
       </div>
 
       <div v-else-if="speedDone" class="text-center py-12" v-motion :initial="{ scale: 0.9, opacity: 0 }" :visible="{ scale: 1, opacity: 1 }">
@@ -374,7 +374,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
           <div><p class="text-2xl font-bold text-mint-500">{{ speedCorrect }}/{{ speedTotal }}</p><p class="text-xs text-slate-500">{{ t('learn.correct') }}</p></div>
           <div><p class="text-2xl font-bold text-amber-500">{{ speedScore }}</p><p class="text-xs text-slate-500">Pts</p></div>
         </div>
-        <button @click="startSpeed" class="px-8 py-3 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
+        <button @click="startSpeed" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
       </div>
 
       <div v-else v-motion :initial="{ opacity: 0 }" :visible="{ opacity: 1 }">

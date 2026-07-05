@@ -105,7 +105,7 @@ function viewElement(z: number) {
       <div v-motion :initial="{ x: -20, opacity: 0 }" :visible="{ x: 0, opacity: 1 }" :duration="400">
         <h2 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider">Moléculas</h2>
         <div class="space-y-2">
-          <button v-for="mol in molecules" :key="mol.id" @click="selectMol(mol.id)" :class="['w-full text-left px-4 py-3 rounded-xl border transition-all', selectedMolecule.id === mol.id ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600']">
+          <button v-for="mol in molecules" :key="mol.id" @click="selectMol(mol.id)" :class="['w-full text-left px-4 py-3 min-h-[44px] rounded-xl border transition-all', selectedMolecule.id === mol.id ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600']">
             <p class="font-mono font-bold text-sm text-slate-800 dark:text-slate-200">{{ mol.formula }}</p>
             <p class="text-xs text-slate-500">{{ locale === 'es' ? mol.nameEs : mol.nameEn }}</p>
           </button>
@@ -129,7 +129,7 @@ function viewElement(z: number) {
             </svg>
           </div>
           <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-            <button @click="rotating = !rotating" class="px-3 py-1.5 rounded-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm text-xs text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-colors">
+            <button @click="rotating = !rotating" class="px-3 py-2.5 rounded-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm text-xs text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-colors">
               {{ rotating ? '⏸ Pause' : '▶ Play' }}
             </button>
             <span class="text-xs text-slate-400 bg-white/60 dark:bg-slate-800/60 px-2 py-1 rounded backdrop-blur-sm font-mono">{{ selectedMolecule.formula }}</span>
@@ -140,7 +140,7 @@ function viewElement(z: number) {
         <div class="mt-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
           <h3 class="font-semibold text-slate-900 dark:text-white mb-2">{{ selectedMolecule.formula }} — {{ locale === 'es' ? selectedMolecule.nameEs : selectedMolecule.nameEn }}</h3>
           <div class="flex flex-wrap gap-2">
-            <button v-for="z in selectedMolecule.elementIds" :key="z" @click="viewElement(z)" class="text-xs px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-mint-400 transition-colors">
+            <button v-for="z in selectedMolecule.elementIds" :key="z" @click="viewElement(z)" class="text-xs px-3 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-mint-400 transition-colors">
               {{ t('learn.viewElement') || 'View element' }} #{{ z }}
             </button>
           </div>
