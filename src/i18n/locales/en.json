@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Química Visual",
+    "title": "Learn the Periodic Table",
     "subtitle": "Interactive Periodic Table",
     "explore": "Explore",
     "learn": "Learn",
@@ -64,7 +64,9 @@
     "labelName": "Name",
     "labelBoth": "Both",
     "colorTheme": "Color theme",
-    "themeNormal": "Normal",
+    "themeCrystal": "Crystal",
+    "themeFilled": "Filled",
+    "themeFilledLight": "Light fill",
     "themeHighContrast": "High contrast",
     "themeDeuteranopia": "Deuteranopia",
     "themeMonochrome": "Monochrome",

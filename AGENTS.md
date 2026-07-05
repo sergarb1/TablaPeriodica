@@ -60,3 +60,11 @@ dist/                  # Built output (gitignored, deployed by Actions)
 - Base: `/TablaPeriodica/`
 - Deploy: push to main → Actions builds & deploys to gh-pages branch
 - Hash router required for SPA routing on GitHub Pages
+
+## Status (Jul 2026)
+### Changes in this session
+- **App renamed** to "Aprende la tabla periódica" in all locations (i18n, index.html, manifest, App.vue)
+- **Logo integrated** — `logo.png` in `public/`, used as favicon, apple-touch-icon, and PWA icon (PNG + SVG variants)
+- **Color themes overhaul** — 3 tile rendering modes: Cristal (glassmorphism), Lleno (solid bg fill, white/dark text via luminance), Suave (15% opacity, colored text) + 3 special themes (highContrast, deuteranopia, monochrome) = 6 themes total
+- **Test suite**: 58/58 passing, build clean
+- **Pending**: Convert logo to true SVG for cleaner favicon; verify theme colors look right in production

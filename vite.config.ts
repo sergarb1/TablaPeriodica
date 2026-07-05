@@ -11,11 +11,11 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons/*.svg'],
+      includeAssets: ['logo.png', 'favicon.svg', 'icons/*.svg'],
       manifest: {
-        name: 'Química Visual — Tabla Periódica Interactiva',
-        short_name: 'Química Visual',
-        description: 'Aprende química de forma visual, bilingüe y gratuita. 118 elementos, juegos, flashcards y guía educativa.',
+        name: 'Aprende la tabla periódica',
+        short_name: 'Tabla Periódica',
+        description: 'App interactiva, bilingüe y gratuita. 118 elementos, juegos, flashcards, guía educativa y laboratorio de moléculas.',
         theme_color: '#0f172a',
         background_color: '#ffffff',
         display: 'standalone',
@@ -24,6 +24,8 @@ export default defineConfig({
         categories: ['education', 'science', 'chemistry'],
         screenshots: [],
         icons: [
+          { src: 'logo.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+          { src: 'logo.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: 'icons/icon-192.svg', sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
           { src: 'icons/icon-512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
         ]

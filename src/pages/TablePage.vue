@@ -12,7 +12,7 @@ import type { ElementData } from '@/types'
 const route = useRoute()
 const router = useRouter()
 const { getAll, search, getFamily } = useElement()
-const { config, getColor, tilePx } = useTableConfig()
+const { config, getColor, tilePx, themeType } = useTableConfig()
 const { t, locale } = useI18n()
 
 const allElements = getAll()
@@ -147,7 +147,7 @@ function tileSize(el: ElementData) {
         <!-- Main 7 rows -->
         <div v-for="(row, ri) in gridRows" :key="'r'+ri" class="flex">
           <div v-for="(cell, ci) in row" :key="'c'+ri+'-'+ci" class="flex-shrink-0" :style="{ width: tileSizePx + 'px', height: tileSizePx + 'px', padding: tileSizePx <= 44 ? '1px' : '2px' }">
-            <ElementTile v-if="cell" :element="cell" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(cell)" :noAnim="!config.animations" :familyColor="config.colorTheme !== 'normal' ? getColor(cell.family, cell.color) : undefined" />
+            <ElementTile v-if="cell" :element="cell" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(cell)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(cell.family, cell.color)" />
           </div>
         </div>
 
@@ -155,11 +155,11 @@ function tileSize(el: ElementData) {
         <template v-if="config.fblockPosition === 'bottom'">
           <div v-if="fBlock.lanthanides.length" class="mt-2 flex" :style="{ gap: tileSizePx <= 44 ? '2px' : '4px' }">
             <span class="flex-shrink-0 text-slate-400 dark:text-slate-500 text-right pr-1 text-xs flex items-center justify-end" :style="{ width: '36px', height: tileSizePx + 'px' }">57-71</span>
-            <ElementTile v-for="el in fBlock.lanthanides" :key="'lan'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :familyColor="config.colorTheme !== 'normal' ? getColor(el.family, el.color) : undefined" />
+            <ElementTile v-for="el in fBlock.lanthanides" :key="'lan'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" />
           </div>
           <div v-if="fBlock.actinides.length" class="mt-1 flex" :style="{ gap: tileSizePx <= 44 ? '2px' : '4px' }">
             <span class="flex-shrink-0 text-slate-400 dark:text-slate-500 text-right pr-1 text-xs flex items-center justify-end" :style="{ width: '36px', height: tileSizePx + 'px' }">89-103</span>
-            <ElementTile v-for="el in fBlock.actinides" :key="'act'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :familyColor="config.colorTheme !== 'normal' ? getColor(el.family, el.color) : undefined" />
+            <ElementTile v-for="el in fBlock.actinides" :key="'act'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" />
           </div>
         </template>
       </div>

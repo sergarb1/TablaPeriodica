@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useTheme } from '@/composables/useTheme'
 import { useLocale } from '@/composables/useLocale'
 
 const { isDark, toggle } = useTheme()
 const { setLocale, currentLocale } = useLocale()
+const logoUrl = computed(() => import.meta.env.BASE_URL + 'logo.png')
 
 const navLinks = [
   { to: '/table', label: 'app.explore' },
@@ -19,14 +21,10 @@ const navLinks = [
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 fullscreen-hidden">
       <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
           <router-link to="/" class="flex items-center gap-2 font-display font-bold shrink-0">
-            <svg class="w-6 h-6 text-mint-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <circle cx="12" cy="12" r="6"/>
-              <circle cx="12" cy="12" r="2"/>
-            </svg>
+            <img :src="logoUrl" alt="Logo" class="w-7 h-7 rounded-lg object-cover" />
             <div class="leading-tight">
-              <span class="text-lg text-slate-900 dark:text-white">Química Visual</span>
-              <span class="hidden sm:block text-[0.6rem] text-slate-400 dark:text-slate-500 font-normal tracking-wider uppercase">Tabla Periódica Interactiva</span>
+              <span class="text-sm sm:text-lg text-slate-900 dark:text-white">{{ $t('app.title') }}</span>
+              <span class="hidden sm:block text-[0.6rem] text-slate-400 dark:text-slate-500 font-normal tracking-wider uppercase">{{ $t('app.subtitle') }}</span>
             </div>
           </router-link>
 
@@ -65,7 +63,7 @@ const navLinks = [
           <span>📖 Licencias libres</span>
         </div>
         <div class="flex flex-col sm:flex-row items-center gap-2 text-slate-400 dark:text-slate-500">
-          <span>© {{ new Date().getFullYear() }} Química Visual — Tabla Periódica Interactiva — Sergi García Barea</span>
+          <span>© {{ new Date().getFullYear() }} Aprende la tabla periódica — Sergi García Barea</span>
           <div class="flex items-center gap-3">
             <a href="https://github.com/sergarb1/TablaPeriodica/blob/main/LICENSE" target="_blank" rel="noopener" class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors underline">AGPL v3</a>
             <a href="https://github.com/sergarb1/TablaPeriodica/blob/main/LICENSE-CONTENT" target="_blank" rel="noopener" class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors underline">CC BY-SA 4.0</a>

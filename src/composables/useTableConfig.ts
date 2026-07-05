@@ -1,9 +1,12 @@
+import { computed } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
+
+export type ThemeType = 'crystal' | 'fill' | 'light'
 
 export interface TableConfig {
   tileSize: 'compact' | 'normal' | 'comfortable' | 'large'
   labelMode: 'symbol' | 'name' | 'both'
-  colorTheme: 'normal' | 'highContrast' | 'deuteranopia' | 'monochrome'
+  colorTheme: 'crystal' | 'filled' | 'filledLight' | 'highContrast' | 'deuteranopia' | 'monochrome'
   fblockPosition: 'bottom' | 'hidden' | 'inline'
   animations: boolean
   showAtomicNumber: boolean
@@ -13,7 +16,7 @@ export interface TableConfig {
 const defaults: TableConfig = {
   tileSize: 'normal',
   labelMode: 'symbol',
-  colorTheme: 'normal',
+  colorTheme: 'crystal',
   fblockPosition: 'bottom',
   animations: true,
   showAtomicNumber: true,
@@ -30,7 +33,9 @@ const TILE_SIZE_MAP: Record<TableConfig['tileSize'], number> = {
 }
 
 const COLOR_THEMES: Record<TableConfig['colorTheme'], Record<string, string>> = {
-  normal: {},
+  crystal: {},
+  filled: {},
+  filledLight: {},
   highContrast: {
     nonmetal: '#0000FF',
     noble_gas: '#800080',
@@ -74,7 +79,7 @@ export function useTableConfig() {
 
   const getColor = (family: string, baseColor: string): string => {
     const theme = COLOR_THEMES[config.value.colorTheme]
-    if (config.value.colorTheme === 'normal' || !theme[family]) return baseColor
+    if (config.value.colorTheme === 'crystal' || config.value.colorTheme === 'filled' || config.value.colorTheme === 'filledLight' || !theme[family]) return baseColor
     return theme[family]
   }
 
@@ -87,12 +92,19 @@ export function useTableConfig() {
 
   const showNumber = () => config.value.showAtomicNumber
 
+  const themeType = computed<ThemeType>(() => {
+    if (config.value.colorTheme === 'filled') return 'fill'
+    if (config.value.colorTheme === 'filledLight') return 'light'
+    return 'crystal'
+  })
+
   return {
     config,
     tilePx,
     getColor,
     labelContent,
     showNumber,
+    themeType,
     defaults,
     TILE_SIZE_MAP,
   }

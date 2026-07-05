@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Química Visual",
+    "title": "Aprende la tabla periódica",
     "subtitle": "Tabla Periódica Interactiva",
     "explore": "Explorar",
     "learn": "Aprender",
@@ -64,7 +64,9 @@
     "labelName": "Nombre",
     "labelBoth": "Ambos",
     "colorTheme": "Tema de color",
-    "themeNormal": "Normal",
+    "themeCrystal": "Cristal",
+    "themeFilled": "Lleno",
+    "themeFilledLight": "Suave",
     "themeHighContrast": "Alto contraste",
     "themeDeuteranopia": "Daltonismo",
     "themeMonochrome": "Blanco y negro",
