@@ -11,7 +11,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['logo.png', 'favicon.svg', 'icons/*.svg'],
+      includeAssets: ['logo.png', 'logoCuadrado.png', 'favicon.svg', 'icons/*.svg'],
       manifest: {
         name: 'Aprende la tabla periódica',
         short_name: 'Tabla Periódica',
@@ -24,8 +24,8 @@ export default defineConfig({
         categories: ['education', 'science', 'chemistry'],
         screenshots: [],
         icons: [
-          { src: 'logo.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
-          { src: 'logo.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'logoCuadrado.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+          { src: 'logoCuadrado.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: 'icons/icon-192.svg', sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
           { src: 'icons/icon-512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
         ]

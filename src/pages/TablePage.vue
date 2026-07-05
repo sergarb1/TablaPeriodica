@@ -98,6 +98,9 @@ const tileSizePx = computed(() => {
   return 80
 })
 
+const tilePadding = computed(() => tileSizePx.value <= 44 ? '1px' : '2px')
+const innerTilePx = computed(() => tileSizePx.value - parseInt(tilePadding.value) * 2)
+
 function tileSize(el: ElementData) {
   if (config.value.tileSize === 'compact') return 'sm'
   if (config.value.tileSize === 'normal') return 'sm'
@@ -118,8 +121,9 @@ function tileSize(el: ElementData) {
         <button @click="toggleFullscreen" class="px-3 py-2 rounded-xl text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
           {{ t('table.fullscreen') }}
         </button>
-        <button @click="showConfig = true" class="px-3 py-2 rounded-xl text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+        <button @click="showConfig = true" class="px-3 py-2 rounded-xl text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>{{ t('table.options') }}</span>
         </button>
       </div>
     </div>
@@ -134,7 +138,7 @@ function tileSize(el: ElementData) {
     <!-- Family filters -->
     <div v-if="!isFullscreen" class="flex items-center gap-2 mb-4 overflow-x-auto pb-1 scrollbar-fade">
       <button @click="selectedFamily = null" :class="['px-3 py-2.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors shrink-0', !selectedFamily ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300']">
-        {{ t('table.families') }}
+        {{ t('table.all') }}
       </button>
       <button v-for="f in families" :key="f" @click="selectedFamily = f" :class="['px-3 py-2.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors shrink-0', selectedFamily === f ? 'text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300']" :style="selectedFamily === f ? { backgroundColor: getColor(f, getFamily(f)?.color || '#666') } : {}">
         {{ t('table.' + FAMILY_LABEL[f]) }}
@@ -146,20 +150,20 @@ function tileSize(el: ElementData) {
       <div class="inline-block" :style="{ minWidth: 18 * tileSizePx + 40 + 'px' }">
         <!-- Main 7 rows -->
         <div v-for="(row, ri) in gridRows" :key="'r'+ri" class="flex">
-          <div v-for="(cell, ci) in row" :key="'c'+ri+'-'+ci" class="flex-shrink-0" :style="{ width: tileSizePx + 'px', height: tileSizePx + 'px', padding: tileSizePx <= 44 ? '1px' : '2px' }">
-            <ElementTile v-if="cell" :element="cell" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(cell)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(cell.family, cell.color)" />
+          <div v-for="(cell, ci) in row" :key="'c'+ri+'-'+ci" class="flex-shrink-0 flex items-center justify-center" :style="{ width: tileSizePx + 'px', height: tileSizePx + 'px', padding: tilePadding }">
+            <ElementTile v-if="cell" :element="cell" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(cell)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(cell.family, cell.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" />
           </div>
         </div>
 
         <!-- f-block rows -->
         <template v-if="config.fblockPosition === 'bottom'">
-          <div v-if="fBlock.lanthanides.length" class="mt-2 flex" :style="{ gap: tileSizePx <= 44 ? '2px' : '4px' }">
+          <div v-if="fBlock.lanthanides.length" class="mt-2 flex items-center" :style="{ gap: tileSizePx <= 44 ? '2px' : '4px' }">
             <span class="flex-shrink-0 text-slate-400 dark:text-slate-500 text-right pr-1 text-xs flex items-center justify-end" :style="{ width: '36px', height: tileSizePx + 'px' }">57-71</span>
-            <ElementTile v-for="el in fBlock.lanthanides" :key="'lan'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" />
+            <ElementTile v-for="el in fBlock.lanthanides" :key="'lan'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" />
           </div>
-          <div v-if="fBlock.actinides.length" class="mt-1 flex" :style="{ gap: tileSizePx <= 44 ? '2px' : '4px' }">
+          <div v-if="fBlock.actinides.length" class="mt-1 flex items-center" :style="{ gap: tileSizePx <= 44 ? '2px' : '4px' }">
             <span class="flex-shrink-0 text-slate-400 dark:text-slate-500 text-right pr-1 text-xs flex items-center justify-end" :style="{ width: '36px', height: tileSizePx + 'px' }">89-103</span>
-            <ElementTile v-for="el in fBlock.actinides" :key="'act'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" />
+            <ElementTile v-for="el in fBlock.actinides" :key="'act'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" />
           </div>
         </template>
       </div>

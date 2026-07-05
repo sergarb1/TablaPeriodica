@@ -16,7 +16,7 @@ export interface TableConfig {
 const defaults: TableConfig = {
   tileSize: 'normal',
   labelMode: 'symbol',
-  colorTheme: 'crystal',
+  colorTheme: 'filled',
   fblockPosition: 'bottom',
   animations: true,
   showAtomicNumber: true,
@@ -25,8 +25,13 @@ const defaults: TableConfig = {
 
 const config = useLocalStorage<TableConfig>('quimica-table-config', defaults)
 
+// Set compact for first-time mobile visitors
+if (!localStorage.getItem('quimica-table-config') && typeof window !== 'undefined' && window.innerWidth < 640) {
+  config.value.tileSize = 'compact'
+}
+
 // Migrate old localStorage keys
-if ((config.value as any).colorTheme === 'normal') (config.value as any).colorTheme = 'crystal'
+if ((config.value as any).colorTheme === 'normal') (config.value as any).colorTheme = 'filled'
 
 const TILE_SIZE_MAP: Record<TableConfig['tileSize'], number> = {
   compact: 36,

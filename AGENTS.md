@@ -34,8 +34,8 @@ src/
     ComparePage.vue     # Side-by-side element comparison with property bars
     LabPage.vue         # 3D molecule viewer (CSS rotate animation, 6 molecules)
     GuidePage.vue       # Head First-style educational guide (7 sections, fun tone, emojis)
-  components/          # Reusable components (ElementTile, etc.)
-  composables/         # useTheme, useLocale, useProgress, useElement
+  components/          # Reusable components (ElementTile, ElementPopover, TableConfig)
+  composables/         # useTheme, useLocale, useProgress, useElement, useTableConfig
   data/                # elements.json (118 elements bilingual), families.json, achievements.json
   i18n/locales/        # es.json, en.json
   router/              # Hash router with 11 routes
@@ -62,9 +62,17 @@ dist/                  # Built output (gitignored, deployed by Actions)
 - Hash router required for SPA routing on GitHub Pages
 
 ## Status (Jul 2026)
-### Changes in this session
-- **App renamed** to "Aprende la tabla periódica" in all locations (i18n, index.html, manifest, App.vue)
-- **Logo integrated** — `logo.png` in `public/`, used as favicon, apple-touch-icon, and PWA icon (PNG + SVG variants)
-- **Color themes overhaul** — 3 tile rendering modes: Cristal (glassmorphism), Lleno (solid bg fill, white/dark text via luminance), Suave (15% opacity, colored text) + 3 special themes (highContrast, deuteranopia, monochrome) = 6 themes total
-- **Test suite**: 58/58 passing, build clean
-- **Pending**: Convert logo to true SVG for cleaner favicon; verify theme colors look right in production
+### Changes this session
+- **Mobile nav hamburger** — mobile (`< sm`) nav links hidden behind hamburger with dropdown
+- **Nav button styling** — nav buttons now have `bg-slate-100 dark:bg-slate-800 rounded-lg` background
+- **Landing page cards smaller** — reduced padding, gaps, font sizes for at-a-glance view
+- **Default theme "filled"** changed from "crystal", old `'normal'` localStorage migrates to `'filled'`
+- **Mobile default compact** — first visit on `< 640px` starts with `tileSize: 'compact'`
+- **Label mode fix** — `labelMode` prop wired to `ElementTile`; symbol/name/both now works
+- **Table alignment fix** — cells use `items-center justify-center`; `tilePx` passed inline to tiles
+- **Opciones button** — gear icon + "Opciones" text in table toolbar
+- **Guide bold rendering** — `**text**` markdown converted to `<strong>` via `bold()` helper
+- **Nav "Tabla periódica"** instead of "Explorar" + i18n key `app.tableLabel`
+- **Popover clickable** — "Detalles" button removed; whole card clickable; "Click para más info" hint
+- **Square logo** — `logoCuadrado.png` added (`public/`); used as favicon, apple-touch-icon, PWA manifest icons
+- **78 tests pass** (6 suites, 0 failures), build clean

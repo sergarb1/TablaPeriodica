@@ -1,9 +1,11 @@
 # Química Visual 🧪
 
+<p align="center">
+  <a href="https://sergarb1.github.io/TablaPeriodica/">🌐 sergarb1.github.io/TablaPeriodica</a>
+</p>
+
 **Aprende la tabla periódica de forma visual, interactiva y gratuita.**
 **Learn the periodic table visually, interactively, and for free.**
-
-🌐 **Live demo:** https://sergarb1.github.io/TablaPeriodica/
 
 ---
 

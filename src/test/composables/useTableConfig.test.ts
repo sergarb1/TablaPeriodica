@@ -19,11 +19,11 @@ describe('useTableConfig', () => {
     expect(config.value.animations).toBe(true)
   })
 
-  it('migrates old "normal" theme to "crystal" from localStorage', async () => {
+  it('migrates old "normal" theme to "filled" from localStorage', async () => {
     localStorage.setItem('quimica-table-config', JSON.stringify({ colorTheme: 'normal' }))
     const { useTableConfig } = await importModule()
     const { config } = useTableConfig()
-    expect(config.value.colorTheme).toBe('crystal')
+    expect(config.value.colorTheme).toBe('filled')
   })
 
   it('preserves valid theme from localStorage', async () => {

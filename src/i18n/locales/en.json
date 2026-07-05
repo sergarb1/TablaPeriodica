@@ -5,6 +5,7 @@
     "explore": "Explore",
     "learn": "Learn",
     "play": "Play",
+    "tableLabel": "Periodic table",
     "search": "Search element...",
     "back": "Back",
     "loading": "Loading...",
@@ -32,6 +33,7 @@
   "table": {
     "legend": "Legend",
     "projector": "Projector mode",
+    "all": "All",
     "families": "Families",
     "nonmetal": "Nonmetal",
     "nobleGas": "Noble gas",
@@ -52,6 +54,7 @@
     "trendMeltingPoint": "Melting point",
     "noTrend": "Family",
     "config": "Settings",
+    "options": "Options",
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit fullscreen",
     "tileSize": "Size",
@@ -267,6 +270,7 @@
     "cancel": "Cancel",
     "details": "Details",
     "close": "Close",
+    "clickForMore": "Click for more info",
     "backToTop": "Back to top"
   }
 }

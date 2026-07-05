@@ -55,8 +55,9 @@ function handleClickOutside(e: MouseEvent) {
       <div
         v-if="visible && element"
         ref="popoverRef"
-        class="fixed z-[100] w-56 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl p-4 pointer-events-auto"
+        class="fixed z-[100] w-56 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl p-4 pointer-events-auto cursor-pointer"
         :style="popoverStyle"
+        @click="router.push('/element/' + element.atomicNumber); emit('close')"
       >
         <div class="flex items-center gap-3 mb-3">
           <div
@@ -80,12 +81,7 @@ function handleClickOutside(e: MouseEvent) {
           <span class="text-slate-700 dark:text-slate-300 text-right">{{ locale === 'es' ? element.stateEs : element.stateEn }}</span>
         </div>
 
-        <button
-          @click="router.push('/element/' + element.atomicNumber); emit('close')"
-          class="mt-3 w-full py-1.5 rounded-lg bg-mint-500 text-white text-[0.65rem] font-semibold hover:bg-mint-600 transition-colors"
-        >
-          {{ $t('common.details') || 'Ver detalle' }}
-        </button>
+        <p class="mt-2 text-center text-[0.55rem] text-slate-400">{{ $t('common.clickForMore') }}</p>
       </div>
     </transition>
   </Teleport>

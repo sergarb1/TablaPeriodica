@@ -64,7 +64,7 @@ describe('ElementTile.vue', () => {
   })
 
   it('renders the atomic number', () => {
-    const wrapper = mountTile()
+    const wrapper = mountTile({ showNumber: true })
     expect(wrapper.text()).toContain('6')
   })
 

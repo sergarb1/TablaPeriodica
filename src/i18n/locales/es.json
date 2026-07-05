@@ -5,6 +5,7 @@
     "explore": "Explorar",
     "learn": "Aprender",
     "play": "Jugar",
+    "tableLabel": "Tabla periódica",
     "search": "Buscar elemento...",
     "back": "Volver",
     "loading": "Cargando...",
@@ -32,6 +33,7 @@
   "table": {
     "legend": "Leyenda",
     "projector": "Modo proyector",
+    "all": "Todas",
     "families": "Familias",
     "nonmetal": "No metal",
     "nobleGas": "Gas noble",
@@ -52,6 +54,7 @@
     "trendMeltingPoint": "Punto de fusión",
     "noTrend": "Familia",
     "config": "Configuración",
+    "options": "Opciones",
     "fullscreen": "Pantalla completa",
     "exitFullscreen": "Salir de pantalla completa",
     "tileSize": "Tamaño",
@@ -267,6 +270,7 @@
     "cancel": "Cancelar",
     "details": "Detalles",
     "close": "Cerrar",
+    "clickForMore": "Click para más información",
     "backToTop": "Volver arriba"
   }
 }
