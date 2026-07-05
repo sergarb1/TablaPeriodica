@@ -26,7 +26,7 @@ const defaults: TableConfig = {
 const config = useLocalStorage<TableConfig>('quimica-table-config', defaults)
 
 // Migrate old localStorage keys
-if (config.value.colorTheme === 'normal') config.value.colorTheme = 'crystal'
+if ((config.value as any).colorTheme === 'normal') (config.value as any).colorTheme = 'crystal'
 
 const TILE_SIZE_MAP: Record<TableConfig['tileSize'], number> = {
   compact: 36,
