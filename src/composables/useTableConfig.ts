@@ -25,6 +25,9 @@ const defaults: TableConfig = {
 
 const config = useLocalStorage<TableConfig>('quimica-table-config', defaults)
 
+// Migrate old localStorage keys
+if (config.value.colorTheme === 'normal') config.value.colorTheme = 'crystal'
+
 const TILE_SIZE_MAP: Record<TableConfig['tileSize'], number> = {
   compact: 36,
   normal: 48,
@@ -78,8 +81,8 @@ export function useTableConfig() {
   const tilePx = () => TILE_SIZE_MAP[config.value.tileSize]
 
   const getColor = (family: string, baseColor: string): string => {
-    const theme = COLOR_THEMES[config.value.colorTheme]
-    if (config.value.colorTheme === 'crystal' || config.value.colorTheme === 'filled' || config.value.colorTheme === 'filledLight' || !theme[family]) return baseColor
+    const theme = COLOR_THEMES[config.value.colorTheme as keyof typeof COLOR_THEMES]
+    if (!theme || config.value.colorTheme === 'crystal' || config.value.colorTheme === 'filled' || config.value.colorTheme === 'filledLight' || !theme[family]) return baseColor
     return theme[family]
   }
 
