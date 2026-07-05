@@ -107,7 +107,7 @@ describe('ElementTile.vue', () => {
     const wrapper = mountTile()
     await wrapper.find('button').trigger('mouseenter')
     expect(wrapper.emitted('hover')).toBeTruthy()
-    expect(wrapper.emitted('hover')![0][0].atomicNumber).toBe(6)
+    expect((wrapper.emitted('hover')![0][0] as { atomicNumber: number }).atomicNumber).toBe(6)
   })
 
   it('emits leave on mouseleave', async () => {
