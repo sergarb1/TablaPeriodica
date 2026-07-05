@@ -14,7 +14,8 @@
     "flashcards": "Flashcards",
     "lab": "Laboratorio",
     "guide": "Guía divertida",
-    "study": "Estudiar"
+    "study": "Estudiar",
+    "trends": "Tendencias"
   },
   "home": {
     "ctaTitle": "¡Vamos a la tabla periódica!",
@@ -204,7 +205,12 @@
     "youWon": "¡Completado!",
     "speedQuiz": "Contrarreloj",
     "timeUp": "¡Tiempo!",
-    "streak": "Racha"
+    "streak": "Racha",
+    "trueFalse": "Verdadero o Falso",
+    "true": "Verdadero",
+    "false": "Falso",
+    "fillBlank": "Completa el hueco",
+    "fillBlankHint": "Escribe tu respuesta..."
   },
   "progress": {
     "title": "Tu progreso",
@@ -289,5 +295,17 @@
     "close": "Cerrar",
     "clickForMore": "Click para más información",
     "backToTop": "Volver arriba"
+  },
+  "trends": {
+    "title": "Tendencias Periódicas 🔥",
+    "subtitle": "Visualiza cómo varían las propiedades en la tabla periódica",
+    "electronegativity": "Electronegatividad",
+    "atomicRadius": "Radio atómico",
+    "ionizationEnergy": "Energía de ionización",
+    "density": "Densidad",
+    "meltingPoint": "Punto de fusión",
+    "boilingPoint": "Punto de ebullición",
+    "value": "Valor",
+    "legend": "Escala de color"
   }
 }

@@ -13,6 +13,21 @@ const allElements = getAll()
 type GameMode = 'quiz' | 'memory' | 'speed' | null
 const activeMode = ref<GameMode>(null)
 
+// Question types for quiz variety
+const questionTypes = ['hints', 'symbol-to-name', 'name-to-symbol', 'true-false', 'fill-blank'] as const
+type QuestionType = typeof questionTypes[number]
+const currentQType = ref<QuestionType>('hints')
+
+// True/False state
+const tfStatement = ref('')
+const tfIsTrue = ref(true)
+
+// Fill-blank state
+const fbAnswer = ref('')
+const fbBlankPrompt = ref('')
+const fbUserInput = ref('')
+const fbSubmitted = ref(false)
+
 const gamesList = [
   { id: 'quiz' as const, icon: '🤔', title: 'Adivina el elemento', desc: '10 preguntas con pistas y XP por racha', gradient: 'from-amber-500 to-orange-500', color: 'amber' },
   { id: 'memory' as const, icon: '🧠', title: 'Memoria', desc: 'Empareja símbolo ↔ nombre · 8 elementos', gradient: 'from-purple-500 to-violet-500', color: 'purple' },
@@ -32,19 +47,86 @@ const gameOver = ref(false)
 const totalQuestions = ref(0)
 const correctCount = ref(0)
 
+function pickQuestionType(): QuestionType {
+  return questionTypes[Math.floor(Math.random() * questionTypes.length)]
+}
+
+function generateTF(element: ElementData) {
+  const props = [
+    { text: `${t('element.group')} ${element.group}`, check: () => element.group !== null },
+    { text: `${t('element.period')} ${element.period}`, check: () => true },
+    { text: `${t('element.block')} ${element.block.toUpperCase()}`, check: () => true },
+    { text: `${t('element.state')}: ${locale.value === 'es' ? element.stateEs : element.stateEn}`, check: () => true },
+    { text: `${t('element.electronegativity')} = ${element.electronegativity}`, check: () => element.electronegativity !== null },
+    { text: `${t('element.density')} = ${element.density} g/cm³`, check: () => element.density !== null },
+  ]
+  const valid = props.filter(p => p.check())
+  const pick = valid[Math.floor(Math.random() * valid.length)]
+  const isTrue = Math.random() > 0.4
+  const display = locale.value === 'es' ? element.nameEs : element.nameEn
+  if (isTrue) {
+    tfStatement.value = `${display}: ${pick.text}`
+    tfIsTrue.value = true
+  } else {
+    const wrong = allElements.filter(e => e.atomicNumber !== element.atomicNumber)
+    const r = wrong[Math.floor(Math.random() * wrong.length)]
+    const wrongProp = props.filter(p => p.check())
+    const wp = wrongProp.length > 1 ? wrongProp.filter(p => p.text !== pick.text)[0] : pick
+    if (wp) {
+      tfStatement.value = `${display}: ${wp.text}`
+    } else {
+      tfStatement.value = `${display}: ${pick.text}`
+    }
+    tfIsTrue.value = false
+    // If we accidentally made it true, flip
+    if (tfStatement.value === `${display}: ${pick.text}`) tfIsTrue.value = false
+  }
+}
+
+function generateFillBlank(element: ElementData) {
+  const display = locale.value === 'es' ? element.nameEs : element.nameEn
+  const blanks = [
+    { prompt: `${t('element.electronConfiguration')}:`, answer: element.electronConfiguration },
+    { prompt: `${t('element.group')}:`, answer: String(element.group ?? '-') },
+    { prompt: `${t('element.period')}:`, answer: String(element.period) },
+    { prompt: `${t('element.block')}:`, answer: element.block.toUpperCase() },
+    { prompt: `${t('element.state')}:`, answer: locale.value === 'es' ? element.stateEs : element.stateEn },
+  ]
+  const pick = blanks[Math.floor(Math.random() * blanks.length)]
+  fbBlankPrompt.value = `${display} — ${pick.prompt}`
+  fbAnswer.value = pick.answer.toLowerCase()
+}
+
 function pickQuestion() {
   const pool = allElements.filter(e => e.nameEs && e.nameEn && e.atomicNumber <= 103)
   const idx = Math.floor(Math.random() * pool.length)
   const correct = pool[idx]
-  const others = pool.filter(e => e.atomicNumber !== correct.atomicNumber)
-  const shuffled = [correct]
-  while (shuffled.length < 4) {
-    const r = Math.floor(Math.random() * others.length)
-    if (!shuffled.find(s => s.atomicNumber === others[r].atomicNumber)) shuffled.push(others[r])
+
+  if (gameStarted.value && totalQuestions.value > 0 && Math.random() < 0.5) {
+    currentQType.value = pickQuestionType()
+  } else {
+    currentQType.value = 'hints'
   }
-  shuffled.sort(() => Math.random() - 0.5)
-  currentElement.value = correct
-  options.value = shuffled
+
+  // Hints mode
+  if (currentQType.value === 'true-false') {
+    generateTF(correct)
+  } else if (currentQType.value === 'fill-blank') {
+    generateFillBlank(correct)
+    fbUserInput.value = ''
+    fbSubmitted.value = false
+  } else {
+    const others = pool.filter(e => e.atomicNumber !== correct.atomicNumber)
+    const shuffled = [correct]
+    while (shuffled.length < 4) {
+      const r = Math.floor(Math.random() * others.length)
+      if (!shuffled.find(s => s.atomicNumber === others[r].atomicNumber)) shuffled.push(others[r])
+    }
+    shuffled.sort(() => Math.random() - 0.5)
+    currentElement.value = correct
+    options.value = shuffled
+  }
+
   selectedAnswer.value = null
   answered.value = false
   totalQuestions.value++
@@ -63,6 +145,43 @@ function selectAnswer(atomicNumber: number) {
   selectedAnswer.value = atomicNumber
   answered.value = true
   if (atomicNumber === currentElement.value!.atomicNumber) {
+    addCorrect()
+    streak.value++
+    if (streak.value > bestStreak.value) bestStreak.value = streak.value
+    correctCount.value++
+    const xpGain = 10 + streak.value * 2
+    addXp(xpGain)
+    score.value += xpGain
+  } else {
+    addIncorrect()
+    streak.value = 0
+  }
+}
+
+function selectTF(answer: boolean) {
+  if (answered.value) return
+  answered.value = true
+  const correct = answer === tfIsTrue.value
+  if (correct) {
+    addCorrect()
+    streak.value++
+    if (streak.value > bestStreak.value) bestStreak.value = streak.value
+    correctCount.value++
+    const xpGain = 10 + streak.value * 2
+    addXp(xpGain)
+    score.value += xpGain
+  } else {
+    addIncorrect()
+    streak.value = 0
+  }
+}
+
+function submitFillBlank() {
+  if (answered.value) return
+  answered.value = true
+  fbSubmitted.value = true
+  const correct = fbUserInput.value.toLowerCase().trim() === fbAnswer.value
+  if (correct) {
     addCorrect()
     streak.value++
     if (streak.value > bestStreak.value) bestStreak.value = streak.value
@@ -274,37 +393,97 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
             </div>
           </div>
           <div class="flex items-center gap-4 text-sm">
+            <span v-if="currentQType !== 'hints' && currentQType !== 'true-false'" class="text-xs text-slate-400 font-mono">{{ currentQType }}</span>
             <span class="text-amber-500 font-medium">{{ score }} XP</span>
             <span v-if="streak >= 2" class="text-orange-500 font-medium">🔥 {{ streak }}</span>
           </div>
         </div>
 
-        <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 mb-4">
-          <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">{{ t('games.hint') }}</p>
-          <div class="space-y-1">
-            <template v-for="(h, i) in clue" :key="i"><p class="text-sm text-slate-700 dark:text-slate-300 font-mono">{{ h }}</p></template>
-          </div>
-          <div v-if="answered && currentElement" class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm" :style="{ backgroundColor: currentElement.color + '30', color: currentElement.color }">{{ currentElement.symbol }}</div>
-            <div>
-              <p class="font-semibold text-slate-900 dark:text-white">{{ getDisplay(currentElement) }}</p>
-              <p class="text-xs text-slate-400">{{ currentElement.atomicNumber }} · {{ currentElement.familyEs }} / {{ currentElement.familyEn }}</p>
+        <!-- HINTS question type -->
+        <template v-if="currentQType === 'hints' || currentQType === 'symbol-to-name' || currentQType === 'name-to-symbol'">
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 mb-4">
+            <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">
+              {{ currentQType === 'symbol-to-name' ? 'Símbolo → Nombre' : currentQType === 'name-to-symbol' ? 'Nombre → Símbolo' : t('games.hint') }}
+            </p>
+            <template v-if="currentQType === 'symbol-to-name' && currentElement">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg" :style="{ backgroundColor: currentElement.color + '30', color: currentElement.color }">{{ currentElement.symbol }}</div>
+                <p class="text-sm text-slate-500 dark:text-slate-400">{{ t('flashcards.flip') }}: {{ t('games.correctAnswers') }} nombre</p>
+              </div>
+            </template>
+            <template v-else-if="currentQType === 'name-to-symbol' && currentElement">
+              <p class="text-lg font-bold text-slate-900 dark:text-white">{{ locale === 'es' ? currentElement.nameEs : currentElement.nameEn }}</p>
+              <p class="text-xs text-slate-400">Z = {{ currentElement.atomicNumber }}</p>
+            </template>
+            <template v-else>
+              <div class="space-y-1">
+                <template v-for="(h, i) in clue" :key="i"><p class="text-sm text-slate-700 dark:text-slate-300 font-mono">{{ h }}</p></template>
+              </div>
+            </template>
+            <div v-if="answered && currentElement" class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm" :style="{ backgroundColor: currentElement.color + '30', color: currentElement.color }">{{ currentElement.symbol }}</div>
+              <div>
+                <p class="font-semibold text-slate-900 dark:text-white">{{ getDisplay(currentElement) }}</p>
+                <p class="text-xs text-slate-400">{{ currentElement.atomicNumber }} · {{ locale === 'es' ? currentElement.familyEs : currentElement.familyEn }}</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="grid gap-2">
-          <button v-for="opt in options" :key="opt.atomicNumber" @click="selectAnswer(opt.atomicNumber)" :disabled="answered"
-            :class="['w-full text-left px-4 py-3 rounded-xl border font-medium transition-all',
-              answered && opt.atomicNumber === currentElement!.atomicNumber ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30 text-mint-700 dark:text-mint-300' :
-              answered && opt.atomicNumber === selectedAnswer ? 'border-red-400 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300' :
-              'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600',
-              answered ? 'cursor-default' : 'cursor-pointer hover:shadow-sm active:scale-[0.99]']">
-            <span class="font-mono text-sm sm:text-base">{{ getOptionLabel(opt) }}</span>
-            <span v-if="answered && opt.atomicNumber === currentElement!.atomicNumber" class="float-right text-mint-500">✓</span>
-            <span v-else-if="answered && opt.atomicNumber === selectedAnswer" class="float-right text-red-500">✗</span>
+          <div class="grid gap-2">
+            <button v-for="opt in options" :key="opt.atomicNumber" @click="selectAnswer(opt.atomicNumber)" :disabled="answered"
+              :class="['w-full text-left px-4 py-3 rounded-xl border font-medium transition-all',
+                answered && opt.atomicNumber === currentElement!.atomicNumber ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30 text-mint-700 dark:text-mint-300' :
+                answered && opt.atomicNumber === selectedAnswer ? 'border-red-400 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300' :
+                'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600',
+                answered ? 'cursor-default' : 'cursor-pointer hover:shadow-sm active:scale-[0.99]']">
+              <span class="font-mono text-sm sm:text-base">{{ getOptionLabel(opt) }}</span>
+              <span v-if="answered && opt.atomicNumber === currentElement!.atomicNumber" class="float-right text-mint-500">✓</span>
+              <span v-else-if="answered && opt.atomicNumber === selectedAnswer" class="float-right text-red-500">✗</span>
+            </button>
+          </div>
+        </template>
+
+        <!-- TRUE/FALSE question type -->
+        <template v-else-if="currentQType === 'true-false'">
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 mb-4 text-center">
+            <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">{{ t('games.trueFalse') }}</p>
+            <p class="text-lg font-semibold text-slate-900 dark:text-white">{{ tfStatement }}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <button @click="selectTF(true)" :disabled="answered"
+              :class="['py-4 rounded-xl font-bold text-lg transition-all',
+                answered && tfIsTrue ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30 text-mint-600 border-2' :
+                answered && !tfIsTrue ? 'border-red-400 bg-red-50 dark:bg-red-950/30 text-red-600 border-2' :
+                'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer hover:shadow-sm active:scale-[0.99]']">
+              {{ t('games.true') }}
+            </button>
+            <button @click="selectTF(false)" :disabled="answered"
+              :class="['py-4 rounded-xl font-bold text-lg transition-all',
+                answered && !tfIsTrue ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30 text-mint-600 border-2' :
+                answered && tfIsTrue ? 'border-red-400 bg-red-50 dark:bg-red-950/30 text-red-600 border-2' :
+                'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer hover:shadow-sm active:scale-[0.99]']">
+              {{ t('games.false') }}
+            </button>
+          </div>
+        </template>
+
+        <!-- FILL-BLANK question type -->
+        <template v-else-if="currentQType === 'fill-blank'">
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 mb-4">
+            <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">{{ t('games.fillBlank') }}</p>
+            <p class="text-base font-semibold text-slate-900 dark:text-white mb-3">{{ fbBlankPrompt }}</p>
+            <input v-model="fbUserInput" :disabled="answered"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-mint-500/50 font-mono text-sm"
+              :placeholder="t('games.fillBlankHint')" @keyup.enter="submitFillBlank" />
+            <div v-if="fbSubmitted" class="mt-2 text-sm font-medium" :class="fbUserInput.toLowerCase().trim() === fbAnswer ? 'text-mint-600' : 'text-red-500'">
+              <template v-if="fbUserInput.toLowerCase().trim() === fbAnswer">✓ {{ t('learn.correct') }}</template>
+              <template v-else>✗ {{ t('learn.incorrect') }}: {{ fbAnswer }}</template>
+            </div>
+          </div>
+          <button v-if="!answered" @click="submitFillBlank" class="w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all">
+            {{ t('common.ok') }}
           </button>
-        </div>
+        </template>
 
         <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all">
           {{ totalQuestions >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}

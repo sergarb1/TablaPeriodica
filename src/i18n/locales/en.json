@@ -14,7 +14,8 @@
     "flashcards": "Flashcards",
     "lab": "Laboratory",
     "guide": "Fun guide",
-    "study": "Study"
+    "study": "Study",
+    "trends": "Trends"
   },
   "home": {
     "ctaTitle": "Let's go to the periodic table!",
@@ -204,7 +205,12 @@
     "youWon": "Completed!",
     "speedQuiz": "Speed Quiz",
     "timeUp": "Time's up!",
-    "streak": "Streak"
+    "streak": "Streak",
+    "trueFalse": "True or False",
+    "true": "True",
+    "false": "False",
+    "fillBlank": "Fill in the blank",
+    "fillBlankHint": "Type your answer..."
   },
   "progress": {
     "title": "Your progress",
@@ -289,5 +295,17 @@
     "close": "Close",
     "clickForMore": "Click for more info",
     "backToTop": "Back to top"
+  },
+  "trends": {
+    "title": "Periodic Trends 🔥",
+    "subtitle": "Visualize how properties vary across the periodic table",
+    "electronegativity": "Electronegativity",
+    "atomicRadius": "Atomic radius",
+    "ionizationEnergy": "Ionization energy",
+    "density": "Density",
+    "meltingPoint": "Melting point",
+    "boilingPoint": "Boiling point",
+    "value": "Value",
+    "legend": "Color scale"
   }
 }

@@ -50,6 +50,11 @@ const router = createRouter({
       component: () => import('@/pages/ComparePage.vue')
     },
     {
+      path: '/trends',
+      name: 'trends',
+      component: () => import('@/pages/TrendsPage.vue')
+    },
+    {
       path: '/guide',
       name: 'guide',
       component: () => import('@/pages/GuidePage.vue')

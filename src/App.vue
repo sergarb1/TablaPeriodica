@@ -10,6 +10,7 @@ const isNavOpen = ref(false)
 
 const navLinks = [
   { to: '/table', label: 'app.tableLabel' },
+  { to: '/trends', label: 'app.trends' },
   { to: '/learn', label: 'app.learn' },
   { to: '/games', label: 'app.play' },
   { to: '/guide', label: 'app.guide' },
