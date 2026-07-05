@@ -29,13 +29,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
 <template>
   <div class="max-w-4xl mx-auto px-4 py-6 sm:py-12">
     <div class="text-center mb-8 sm:mb-10">
-      <img :src="logoUrl" alt="Logo" class="h-16 sm:h-28 w-auto object-contain mx-auto mb-6" v-motion :initial="{ scale: 0.8, opacity: 0 }" :visible="{ scale: 1, opacity: 1 }" :duration="400" />
-      <h1 class="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-mint-600 to-emerald-600 dark:from-mint-400 dark:to-emerald-400 bg-clip-text text-transparent mb-2" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="500">
-        {{ t('app.title') }}
-      </h1>
-      <p class="text-sm sm:text-lg text-slate-500 dark:text-slate-400 max-w-md mx-auto" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="500" :delay="100">
-        {{ t('app.subtitle') }}
-      </p>
+      <img :src="logoUrl" alt="Aprende la tabla periódica" class="h-24 sm:h-36 w-auto object-contain mx-auto mb-6" v-motion :initial="{ scale: 0.8, opacity: 0 }" :visible="{ scale: 1, opacity: 1 }" :duration="400" />
     </div>
 
     <!-- Big CTA -->

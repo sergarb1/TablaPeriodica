@@ -21,11 +21,7 @@ const navLinks = [
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 fullscreen-hidden">
       <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
           <router-link to="/" class="flex items-center gap-2 font-display font-bold shrink-0">
-            <img :src="logoUrl" alt="Logo" class="h-8 sm:h-9 w-auto object-contain" />
-            <div class="leading-tight">
-              <span class="text-sm sm:text-lg text-slate-900 dark:text-white">{{ $t('app.title') }}</span>
-              <span class="hidden sm:block text-[0.6rem] text-slate-400 dark:text-slate-500 font-normal tracking-wider uppercase">{{ $t('app.subtitle') }}</span>
-            </div>
+            <img :src="logoUrl" alt="Aprende la tabla periódica" class="h-8 sm:h-9 w-auto object-contain" />
           </router-link>
 
         <nav class="flex items-center gap-1 overflow-x-auto overflow-y-hidden">
