@@ -31,7 +31,7 @@ function closeNav() {
 
         <!-- Desktop nav -->
         <nav class="hidden sm:flex items-center gap-1">
-          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:bg-slate-300 dark:active:bg-slate-600 transition-colors">
+          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
             {{ $t(link.label) }}
           </router-link>
         </nav>
@@ -58,7 +58,7 @@ function closeNav() {
       <!-- Mobile nav dropdown -->
       <div v-if="isNavOpen" class="sm:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-lg">
         <div class="px-4 py-3 flex flex-col gap-1">
-          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeNav" class="px-3 py-2.5 text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:bg-slate-300 dark:active:bg-slate-600 transition-colors">
+          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeNav" class="px-3 py-2.5 text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
             {{ $t(link.label) }}
           </router-link>
         </div>

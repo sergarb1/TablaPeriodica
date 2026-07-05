@@ -39,8 +39,14 @@ const isDarkBg = computed(() => luminance(fillColor.value) < 0.4)
 const displayLabel = computed(() => {
   const el = props.element
   if (props.labelMode === 'name') return locale.value === 'es' ? el.nameEs : el.nameEn
-  if (props.labelMode === 'both') return el.symbol + ' ' + (locale.value === 'es' ? el.nameEs : el.nameEn)
+  if (props.labelMode === 'both') return el.symbol
   return el.symbol
+})
+
+const displaySubLabel = computed(() => {
+  if (props.labelMode !== 'both') return ''
+  const el = props.element
+  return locale.value === 'es' ? el.nameEs : el.nameEn
 })
 
 const fontSize = computed(() => {
@@ -50,6 +56,40 @@ const fontSize = computed(() => {
     return 'text-base'
   }
   return s === 'sm' ? 'text-xs' : s === 'lg' ? 'text-base' : 'text-sm'
+})
+
+const nameSize = computed(() => {
+  if (props.tilePx) {
+    if (props.tilePx <= 36) return 'text-[0.45rem]'
+    if (props.tilePx <= 48) return 'text-[0.5rem]'
+    return 'text-[0.55rem]'
+  }
+  return 'text-[0.45rem]'
+})
+
+const nameLabelSize = computed(() => {
+  if (props.labelMode !== 'name') return ''
+  const el = props.element
+  const nameLength = (locale.value === 'es' ? el.nameEs : el.nameEn).length
+  const base = props.tilePx
+  if (base) {
+    if (base <= 36) {
+      if (nameLength > 9) return 'text-[0.35rem]'
+      if (nameLength > 6) return 'text-[0.4rem]'
+      return 'text-[0.45rem]'
+    }
+    if (base <= 48) {
+      if (nameLength > 9) return 'text-[0.4rem]'
+      if (nameLength > 6) return 'text-[0.45rem]'
+      return 'text-[0.5rem]'
+    }
+    if (nameLength > 9) return 'text-[0.45rem]'
+    if (nameLength > 6) return 'text-[0.55rem]'
+    return 'text-[0.6rem]'
+  }
+  if (nameLength > 9) return 'text-[0.4rem]'
+  if (nameLength > 6) return 'text-[0.45rem]'
+  return 'text-[0.5rem]'
 })
 
 const numSize = computed(() => {
@@ -102,7 +142,12 @@ const tileStyle = computed(() => {
     :style="tileStyle"
   >
     <div v-if="tileTheme !== 'fill' && tileTheme !== 'light'" class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" :style="{ background: 'radial-gradient(circle at center, ' + fillColor + '30 0%, transparent 70%)' }" />
-    <span :class="['font-bold leading-none relative z-10', fontSize]" :style="tileTheme === 'fill' ? { color: 'inherit' } : { color: fillColor, textShadow: '0 0 8px ' + fillColor + '40' }">{{ displayLabel }}</span>
+    <template v-if="props.labelMode === 'both'">
+      <span class="font-bold leading-none relative z-10" :class="[fontSize]" :style="tileTheme === 'fill' ? { color: 'inherit' } : { color: fillColor, textShadow: '0 0 8px ' + fillColor + '40' }">{{ displayLabel }}</span>
+      <span class="leading-none relative z-10 truncate max-w-full px-0.5" :class="[nameSize]" :title="displaySubLabel" :style="tileTheme === 'fill' ? { color: 'inherit', opacity: 0.8 } : { color: fillColor, opacity: 0.7 }">{{ displaySubLabel }}</span>
+    </template>
+    <span v-else-if="props.labelMode === 'symbol'" :class="['font-bold leading-none relative z-10', fontSize]" :style="tileTheme === 'fill' ? { color: 'inherit' } : { color: fillColor, textShadow: '0 0 8px ' + fillColor + '40' }" class="truncate max-w-full px-0.5">{{ displayLabel }}</span>
+    <span v-else :class="['font-bold leading-none relative z-10', nameLabelSize]" :title="displayLabel" :style="tileTheme === 'fill' ? { color: 'inherit' } : { color: fillColor, textShadow: '0 0 8px ' + fillColor + '40' }" class="truncate max-w-full px-0.5">{{ displayLabel }}</span>
     <span v-if="showNumber" class="leading-none relative z-10 opacity-60 dark:opacity-50" :class="[numSize]">{{ element.atomicNumber }}</span>
     <slot />
   </button>

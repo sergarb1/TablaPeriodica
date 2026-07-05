@@ -13,7 +13,7 @@
     "compare": "Compare",
     "flashcards": "Flashcards",
     "lab": "Laboratory",
-    "guide": "Guide",
+    "guide": "Fun guide",
     "study": "Study"
   },
   "home": {
@@ -114,6 +114,9 @@
   "element": {
     "atomicNumber": "Atomic number",
     "atomicMass": "Atomic mass",
+    "protons": "Proton",
+    "neutrons": "Neutron",
+    "electrons": "Electron",
     "group": "Group",
     "period": "Period",
     "block": "Block",
@@ -158,7 +161,21 @@
     "weakElements": "Your weak spots",
     "review": "Review",
     "dailyGoal": "Daily goal",
-    "minutesStudied": "minutes studied"
+    "minutesStudied": "minutes studied",
+    "recommended": "Recommended for you",
+    "continueFamily": "Continue with {family}",
+    "startFamily": "Start with {family}",
+    "allDone": "All done! 🎉",
+    "allDoneDesc": "You've studied every family. Review with flashcards!",
+    "notStarted": "Not started",
+    "complete": "Complete",
+    "weakFromFlashcards": "Elements to review",
+    "onTrack": "You're on track! ✅",
+    "onTrackDesc": "No elements marked as difficult",
+    "timeToday": "today",
+    "allFamilies": "All families",
+    "tapToFlip": "Tap for details",
+    "studyNow": "Study now"
   },
   "games": {
     "title": "Minigames",

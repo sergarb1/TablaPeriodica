@@ -60,7 +60,7 @@ const risks = computed(() => {
 <template>
   <div class="max-w-4xl mx-auto px-4 py-8">
     <template v-if="element">
-    <button @click="router.back()" class="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 mb-6 transition-colors">
+    <button @click="router.back()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-mint-700 dark:text-mint-300 bg-mint-100 dark:bg-mint-950/30 hover:bg-mint-200 dark:hover:bg-mint-900/50 mb-6 transition-colors">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
       {{ t('app.back') }}
     </button>
