@@ -9,6 +9,7 @@ const router = useRouter()
 const { progress } = useProgress()
 const { getByNumber } = useElement()
 const { t, locale } = useI18n()
+const logoUrl = computed(() => import.meta.env.BASE_URL + 'logo.png')
 
 const dailyNum = computed(() => (new Date().getDate() % 118) + 1)
 const dailyElement = computed(() => getByNumber(dailyNum.value))
@@ -28,11 +29,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
 <template>
   <div class="max-w-4xl mx-auto px-4 py-6 sm:py-12">
     <div class="text-center mb-8 sm:mb-10">
-      <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-emerald-100 dark:from-mint-900/30 dark:to-emerald-900/20 mb-5" v-motion :initial="{ scale: 0 }" :visible="{ scale: 1 }" :duration="400">
-        <svg class="w-7 h-7 sm:w-8 sm:h-8 text-mint-600 dark:text-mint-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-        </svg>
-      </div>
+      <img :src="logoUrl" alt="Logo" class="h-16 sm:h-28 w-auto object-contain mx-auto mb-6" v-motion :initial="{ scale: 0.8, opacity: 0 }" :visible="{ scale: 1, opacity: 1 }" :duration="400" />
       <h1 class="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-mint-600 to-emerald-600 dark:from-mint-400 dark:to-emerald-400 bg-clip-text text-transparent mb-2" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="500">
         {{ t('app.title') }}
       </h1>
