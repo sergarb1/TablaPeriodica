@@ -112,7 +112,7 @@ function trophyIcon(icon: string) {
             <p class="text-xs text-slate-500">{{ achievementDesc(a) }}</p>
           </div>
         </div>
-        <div v-for="a in lockedAchievements" :key="a.id" class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 opacity-50">
+        <div v-for="a in lockedAchievements" :key="a.id" class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 opacity-65">
           <span class="text-xl">🔒</span>
           <div>
             <p class="text-sm font-medium text-slate-400 dark:text-slate-500">{{ achievementName(a) }}</p>

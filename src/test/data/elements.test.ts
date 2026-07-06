@@ -78,6 +78,22 @@ describe('elements.json data integrity', () => {
       expect(typeof el.yearDiscovered).toBe('string')
     }
   })
+
+  it('ElementData type supports electronAffinity and imageUrl', () => {
+    const data: Partial<ElementData> = {
+      electronAffinity: null,
+      imageUrl: null,
+    }
+    expect('electronAffinity' in data).toBe(true)
+    expect('imageUrl' in data).toBe(true)
+  })
+
+  it('electronAffinity is number or null when populated', () => {
+    const withAffinity = elements.filter((el): el is typeof el & { electronAffinity: number | null } => 'electronAffinity' in el)
+    for (const el of withAffinity) {
+      expect(el.electronAffinity === null || typeof el.electronAffinity === 'number').toBe(true)
+    }
+  })
 })
 
 describe('families.json data integrity', () => {

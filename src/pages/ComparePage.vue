@@ -66,10 +66,10 @@ function maxVal(key: keyof ElementData): number {
     <!-- Selectors -->
     <div class="grid sm:grid-cols-2 gap-4 mb-8">
       <div class="relative">
-        <label class="block text-xs font-medium text-slate-400 dark:text-slate-500 mb-1">Element A</label>
-        <input v-model="searchA" @focus="showDropdownA = true" @blur="blurA" placeholder="Search..." class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-mint-400">
+        <label class="block text-xs font-medium text-slate-400 dark:text-slate-500 mb-1">{{ t('compare.elementA') }}</label>
+        <input v-model="searchA" @focus="showDropdownA = true" @blur="blurA" :placeholder="t('compare.searchPlaceholder')" :aria-label="t('compare.elementA')" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-mint-400">
         <div v-if="showDropdownA && resultsA.length" class="absolute z-20 top-full left-0 right-0 mt-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-lg max-h-60 overflow-y-auto">
-          <button v-for="el in resultsA" :key="el.atomicNumber" @click="selectA(el)" class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-xs transition-colors">
+          <button v-for="el in resultsA" :key="el.atomicNumber" @click="selectA(el)" class="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-xs transition-colors">
             <span class="font-mono font-bold text-slate-700 dark:text-slate-300 w-8">{{ el.symbol }}</span>
             <span class="text-slate-500 dark:text-slate-400">{{ locale === 'es' ? el.nameEs : el.nameEn }}</span>
             <span class="text-slate-400 ml-auto">{{ el.atomicNumber }}</span>
@@ -77,10 +77,10 @@ function maxVal(key: keyof ElementData): number {
         </div>
       </div>
       <div class="relative">
-        <label class="block text-xs font-medium text-slate-400 dark:text-slate-500 mb-1">Element B</label>
-        <input v-model="searchB" @focus="showDropdownB = true" @blur="blurB" placeholder="Search..." class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-mint-400">
+        <label class="block text-xs font-medium text-slate-400 dark:text-slate-500 mb-1">{{ t('compare.elementB') }}</label>
+        <input v-model="searchB" @focus="showDropdownB = true" @blur="blurB" :placeholder="t('compare.searchPlaceholder')" :aria-label="t('compare.elementB')" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-mint-400">
         <div v-if="showDropdownB && resultsB.length" class="absolute z-20 top-full left-0 right-0 mt-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-lg max-h-60 overflow-y-auto">
-          <button v-for="el in resultsB" :key="el.atomicNumber" @click="selectB(el)" class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-xs transition-colors">
+          <button v-for="el in resultsB" :key="el.atomicNumber" @click="selectB(el)" class="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-xs transition-colors">
             <span class="font-mono font-bold text-slate-700 dark:text-slate-300 w-8">{{ el.symbol }}</span>
             <span class="text-slate-500 dark:text-slate-400">{{ locale === 'es' ? el.nameEs : el.nameEn }}</span>
             <span class="text-slate-400 ml-auto">{{ el.atomicNumber }}</span>
@@ -99,7 +99,7 @@ function maxVal(key: keyof ElementData): number {
           <p class="font-semibold text-slate-900 dark:text-white text-xs sm:text-sm truncate">{{ searchA }}</p>
           <p class="text-[0.6rem] sm:text-xs text-slate-400 truncate">{{ locale === 'es' ? elA.familyEs : elA.familyEn }}</p>
         </div>
-        <div class="flex items-center justify-center"><span class="text-base sm:text-2xl text-slate-300">VS</span></div>
+        <div class="flex items-center justify-center"><span class="text-base sm:text-2xl text-slate-300">{{ t('compare.vs') }}</span></div>
         <div class="p-3 sm:p-4 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-900/20 border border-rose-200/50 dark:border-rose-800/30">
           <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-slate-800 shadow flex items-center justify-center mx-auto mb-1 sm:mb-2">
             <span class="text-xl sm:text-2xl font-bold font-mono text-slate-800 dark:text-slate-200">{{ elB.symbol }}</span>

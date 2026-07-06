@@ -98,19 +98,19 @@ const quickLinks = [
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
         <div class="text-center">
           <p class="text-2xl font-bold text-mint-500">{{ totalStudied }}</p>
-          <p class="text-[0.6rem] text-slate-400 uppercase tracking-wider">{{ t('progress.elementsStudied') }}</p>
+          <p class="text-xs text-slate-400 uppercase tracking-wider">{{ t('progress.elementsStudied') }}</p>
         </div>
         <div class="text-center">
           <p class="text-2xl font-bold text-amber-500">{{ t('home.level') }} {{ currentLevel }}</p>
-          <p class="text-[0.6rem] text-slate-400 uppercase tracking-wider">{{ progress.totalXp }} XP</p>
+          <p class="text-xs text-slate-400 uppercase tracking-wider">{{ progress.totalXp }} XP</p>
         </div>
         <div class="text-center">
           <p class="text-2xl font-bold text-purple-500">{{ progress.streak }}</p>
-          <p class="text-[0.6rem] text-slate-400 uppercase tracking-wider">{{ t('home.streak') }}</p>
+          <p class="text-xs text-slate-400 uppercase tracking-wider">{{ t('home.streak') }}</p>
         </div>
         <div class="text-center">
           <p class="text-2xl font-bold text-blue-500">{{ progress.studyTimeMinutes || 0 }}m</p>
-          <p class="text-[0.6rem] text-slate-400 uppercase tracking-wider">{{ t('learn.minutesStudied') }} {{ t('learn.timeToday') }}</p>
+          <p class="text-xs text-slate-400 uppercase tracking-wider">{{ t('learn.minutesStudied') }} {{ t('learn.timeToday') }}</p>
         </div>
       </div>
 

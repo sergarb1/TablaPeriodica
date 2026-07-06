@@ -36,13 +36,13 @@ function closeNav() {
 
         <!-- Desktop nav -->
         <nav class="hidden sm:flex items-center gap-1" aria-label="{{ $t('common.mainNav') }}">
-          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
+          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="px-2 sm:px-3 py-2 text-xs sm:text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
             {{ $t(link.label) }}
           </router-link>
         </nav>
 
         <div class="flex items-center gap-1 shrink-0">
-          <button @click="toggle" class="p-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-visible:outline-2 focus-visible:outline-mint-500" :title="isDark ? 'Light mode' : 'Dark mode'" :aria-label="isDark ? $t('common.light') : $t('common.dark')">
+          <button @click="toggle" class="min-w-[44px] min-h-[44px] p-2.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-visible:outline-2 focus-visible:outline-mint-500" :title="isDark ? 'Light mode' : 'Dark mode'" :aria-label="isDark ? $t('common.light') : $t('common.dark')">
             <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
           </button>
@@ -52,7 +52,7 @@ function closeNav() {
             <button @click="setLocale('en')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-mint-500', currentLocale === 'en' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']" role="tab" :aria-selected="currentLocale === 'en'" aria-label="English">EN</button>
           </div>
           <!-- Mobile hamburger -->
-          <button @click="isNavOpen = !isNavOpen" class="sm:hidden p-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-1 focus-visible:outline-2 focus-visible:outline-mint-500" :aria-label="$t(isNavOpen ? 'common.close' : 'common.menu')" :aria-expanded="isNavOpen">
+          <button @click="isNavOpen = !isNavOpen" class="sm:hidden min-w-[44px] min-h-[44px] p-2.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-1 focus-visible:outline-2 focus-visible:outline-mint-500" :aria-label="$t(isNavOpen ? 'common.close' : 'common.menu')" :aria-expanded="isNavOpen">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path v-if="!isNavOpen" d="M4 6h16M4 12h16M4 18h16" />
               <path v-else d="M6 18L18 6M6 6l12 12" />
@@ -62,13 +62,15 @@ function closeNav() {
       </div>
 
       <!-- Mobile nav dropdown -->
-      <div v-if="isNavOpen" class="sm:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-lg" role="navigation" :aria-label="$t('common.mainNav')">
-        <div class="px-4 py-3 flex flex-col gap-1">
-          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeNav" class="px-3 py-2.5 text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
-            {{ $t(link.label) }}
-          </router-link>
+      <transition name="slide-down">
+        <div v-if="isNavOpen" class="sm:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-lg" role="navigation" :aria-label="$t('common.mainNav')">
+          <div class="px-4 py-3 flex flex-col gap-1">
+            <router-link v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeNav" class="px-3 py-3 text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
+              {{ $t(link.label) }}
+            </router-link>
+          </div>
         </div>
-      </div>
+      </transition>
     </header>
 
     <main id="main-content" class="flex-1" role="main">
@@ -104,6 +106,18 @@ function closeNav() {
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+.slide-down-enter-active, .slide-down-leave-active {
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+.slide-down-enter-from, .slide-down-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+.slide-down-enter-to, .slide-down-leave-from {
+  max-height: 400px;
+  opacity: 1;
 }
 :global(.table-fullscreen) .fullscreen-hidden {
   display: none !important;

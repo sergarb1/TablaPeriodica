@@ -127,6 +127,7 @@
     "electronegativity": "Electronegativity",
     "atomicRadius": "Atomic radius",
     "ionizationEnergy": "Ionization energy",
+    "electronAffinity": "Electron affinity",
     "valence": "Valence",
     "oxidationStates": "Oxidation states",
     "density": "Density",
@@ -144,7 +145,10 @@
     "bohrModel": "Bohr model",
     "electronDistribution": "Electron distribution",
     "orbitals": "Orbital diagram",
-    "compare": "Compare"
+    "compare": "Compare",
+    "gallery": "Gallery",
+    "viewOnTable": "View on table",
+    "photoCredit": "Representative image"
   },
   "learn": {
     "title": "Learning path",
@@ -217,7 +221,16 @@
     "mistakes": "mistakes",
     "sort": "Sort",
     "sortSubmit": "Confirm order",
-    "groupGuess": "Guess the group/period"
+    "groupGuess": "Guess the group/period",
+    "blockGuess": "Which block?",
+    "propertiesCompare": "Which has higher {prop}?",
+    "electronCount": "How many valence electrons?",
+    "configMatch": "Config → Element",
+    "propElectronegativity": "electronegativity",
+    "propDensity": "density",
+    "propMass": "atomic mass",
+    "propRadius": "atomic radius",
+    "propIonization": "ionization energy"
   },
   "progress": {
     "title": "Your progress",
@@ -318,5 +331,16 @@
     "boilingPoint": "Boiling point",
     "value": "Value",
     "legend": "Color scale"
+  },
+  "compare": {
+    "elementA": "Element A",
+    "elementB": "Element B",
+    "searchPlaceholder": "Search element...",
+    "vs": "VS",
+    "mass": "Mass",
+    "radius": "Radius",
+    "ie": "IE",
+    "mp": "M.P.",
+    "bp": "B.P."
   }
 }

@@ -112,12 +112,26 @@ const fBlock = computed(() => {
 })
 
 const hoverEl = ref<typeof allElements[0] | null>(null)
+const tapEl = ref<typeof allElements[0] | null>(null)
+let tapTimer: ReturnType<typeof setTimeout> | null = null
+function onTileClick(el: typeof allElements[0]) {
+  tapEl.value = el
+  if (tapTimer) clearTimeout(tapTimer)
+  tapTimer = setTimeout(() => { tapEl.value = null }, 2000)
+}
 const hoverValue = computed(() => {
   if (!hoverEl.value) return ''
   const trend = trends.find(t => t.key === activeTrend.value)!
   const v = getValue(hoverEl.value, activeTrend.value)
   const name = locale.value === 'es' ? hoverEl.value.nameEs : hoverEl.value.nameEn
   return `${hoverEl.value.symbol} · ${name}: ${formatValue(v, trend)}`
+})
+const tapValue = computed(() => {
+  if (!tapEl.value) return ''
+  const trend = trends.find(t => t.key === activeTrend.value)!
+  const v = getValue(tapEl.value, activeTrend.value)
+  const name = locale.value === 'es' ? tapEl.value.nameEs : tapEl.value.nameEn
+  return `${tapEl.value.symbol} · ${name}: ${formatValue(v, trend)}`
 })
 
 const activeDef = computed(() => trends.find(t => t.key === activeTrend.value)!)
@@ -140,7 +154,7 @@ const TILE_GAP = 2
         :key="tr.key"
         @click="activeTrend = tr.key"
         :class="[
-          'px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
+          'px-4 py-2.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
           activeTrend === tr.key
             ? 'bg-mint-500 text-white shadow-md scale-105'
             : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -169,7 +183,7 @@ const TILE_GAP = 2
               v-if="cell"
               @mouseenter="hoverEl = cell"
               @mouseleave="hoverEl = null"
-              @click="router.push('/element/' + cell.atomicNumber)"
+              @click="onTileClick(cell); router.push('/element/' + cell.atomicNumber)"
               class="relative flex flex-col items-center justify-center w-full h-full rounded cursor-pointer transition-all duration-200 hover:z-10 hover:scale-125 hover:shadow-xl active:scale-95"
               :style="{ backgroundColor: tileColor(cell), color: 'white', textShadow: '0 0 3px rgba(0,0,0,0.6)' }"
             >
@@ -185,7 +199,7 @@ const TILE_GAP = 2
             <span class="flex-shrink-0 text-slate-400 dark:text-slate-500 text-right pr-1 text-[0.5rem] flex items-center justify-end" :style="{ width: '36px', height: TILE_SIZE + 'px' }">57-71</span>
             <div v-for="el in fBlock.lanthanides" :key="'lan'+el.atomicNumber"
               @mouseenter="hoverEl = el" @mouseleave="hoverEl = null"
-              @click="router.push('/element/' + el.atomicNumber)"
+              @click="onTileClick(el); router.push('/element/' + el.atomicNumber)"
               class="flex flex-col items-center justify-center rounded cursor-pointer transition-all duration-200 hover:z-10 hover:scale-125 hover:shadow-xl active:scale-95"
               :style="{ width: TILE_SIZE + 'px', height: TILE_SIZE + 'px', backgroundColor: tileColor(el), color: 'white', textShadow: '0 0 3px rgba(0,0,0,0.6)' }"
             >
@@ -197,7 +211,7 @@ const TILE_GAP = 2
             <span class="flex-shrink-0 text-slate-400 dark:text-slate-500 text-right pr-1 text-[0.5rem] flex items-center justify-end" :style="{ width: '36px', height: TILE_SIZE + 'px' }">89-103</span>
             <div v-for="el in fBlock.actinides" :key="'act'+el.atomicNumber"
               @mouseenter="hoverEl = el" @mouseleave="hoverEl = null"
-              @click="router.push('/element/' + el.atomicNumber)"
+              @click="onTileClick(el); router.push('/element/' + el.atomicNumber)"
               class="flex flex-col items-center justify-center rounded cursor-pointer transition-all duration-200 hover:z-10 hover:scale-125 hover:shadow-xl active:scale-95"
               :style="{ width: TILE_SIZE + 'px', height: TILE_SIZE + 'px', backgroundColor: tileColor(el), color: 'white', textShadow: '0 0 3px rgba(0,0,0,0.6)' }"
             >
@@ -209,9 +223,9 @@ const TILE_GAP = 2
       </div>
     </div>
 
-    <!-- Hover tooltip -->
-    <div v-if="hoverEl" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium shadow-xl transition-all">
-      {{ hoverValue }}
+    <!-- Hover/tap tooltip -->
+    <div v-if="hoverEl || tapEl" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium shadow-xl transition-all">
+      {{ tapEl ? tapValue : hoverValue }}
     </div>
   </div>
 </template>

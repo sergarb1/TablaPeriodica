@@ -127,6 +127,7 @@
     "electronegativity": "Electronegatividad",
     "atomicRadius": "Radio atómico",
     "ionizationEnergy": "Energía de ionización",
+    "electronAffinity": "Afinidad electrónica",
     "valence": "Valencia",
     "oxidationStates": "Estados de oxidación",
     "density": "Densidad",
@@ -144,7 +145,10 @@
     "bohrModel": "Modelo de Bohr",
     "electronDistribution": "Distribución electrónica",
     "orbitals": "Diagrama de orbitales",
-    "compare": "Comparar"
+    "compare": "Comparar",
+    "gallery": "Galería",
+    "viewOnTable": "Ver en la tabla",
+    "photoCredit": "Imagen representativa"
   },
   "learn": {
     "title": "Ruta de aprendizaje",
@@ -217,7 +221,16 @@
     "mistakes": "fallos",
     "sort": "Ordena",
     "sortSubmit": "Confirmar orden",
-    "groupGuess": "Adivina el grupo/período"
+    "groupGuess": "Adivina el grupo/período",
+    "blockGuess": "¿De qué bloque?",
+    "propertiesCompare": "¿Cuál tiene mayor {prop}?",
+    "electronCount": "¿Cuántos electrones de valencia?",
+    "configMatch": "Config → Elemento",
+    "propElectronegativity": "electronegatividad",
+    "propDensity": "densidad",
+    "propMass": "masa atómica",
+    "propRadius": "radio atómico",
+    "propIonization": "E. de ionización"
   },
   "progress": {
     "title": "Tu progreso",
@@ -318,5 +331,16 @@
     "boilingPoint": "Punto de ebullición",
     "value": "Valor",
     "legend": "Escala de color"
+  },
+  "compare": {
+    "elementA": "Elemento A",
+    "elementB": "Elemento B",
+    "searchPlaceholder": "Buscar elemento...",
+    "vs": "VS",
+    "mass": "Masa",
+    "radius": "Radio",
+    "ie": "EI",
+    "mp": "P.F.",
+    "bp": "P.E."
   }
 }

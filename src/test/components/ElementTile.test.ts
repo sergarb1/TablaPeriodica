@@ -127,4 +127,17 @@ describe('ElementTile.vue', () => {
     const btn = wrapper.find('button')
     expect(btn.classes()).toContain('opacity-100')
   })
+
+  it('applies highlight ring when highlighted is true', () => {
+    const wrapper = mountTile({ highlighted: true })
+    const btn = wrapper.find('button')
+    expect(btn.classes()).toContain('ring-2')
+    expect(btn.classes()).toContain('ring-mint-400')
+  })
+
+  it('does not have highlight ring when highlighted is false', () => {
+    const wrapper = mountTile({ highlighted: false })
+    const btn = wrapper.find('button')
+    expect(btn.classes()).not.toContain('ring-mint-400')
+  })
 })

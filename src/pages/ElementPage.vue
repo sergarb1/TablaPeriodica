@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useElement } from '@/composables/useElement'
 import { useProgress } from '@/composables/useProgress'
@@ -47,6 +47,12 @@ const curiosity = computed(() => {
   return locale.value === 'es' ? element.value.curiosityEs : element.value.curiosityEn
 })
 
+const windowWidth = ref(window.innerWidth)
+function onResize() { windowWidth.value = window.innerWidth }
+onMounted(() => window.addEventListener('resize', onResize))
+onUnmounted(() => window.removeEventListener('resize', onResize))
+const bohrSize = computed(() => windowWidth.value < 640 ? 120 : 180)
+
 const uses = computed(() => {
   if (!element.value) return ''
   return locale.value === 'es' ? element.value.usesEs : element.value.usesEn
@@ -61,13 +67,19 @@ const risks = computed(() => {
 <template>
   <div class="max-w-4xl mx-auto px-4 py-8">
     <template v-if="element">
-    <button @click="router.back()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-mint-700 dark:text-mint-300 bg-mint-100 dark:bg-mint-950/30 hover:bg-mint-200 dark:hover:bg-mint-900/50 mb-6 transition-colors">
+    <button @click="router.back()" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-mint-700 dark:text-mint-300 bg-mint-100 dark:bg-mint-950/30 hover:bg-mint-200 dark:hover:bg-mint-900/50 mb-3 transition-colors">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
       {{ t('app.back') }}
     </button>
+    <div class="flex items-center gap-2 mb-6">
+      <router-link :to="'/table?highlight=' + element.atomicNumber" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        {{ t('element.viewOnTable') }}
+      </router-link>
+    </div>
 
     <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-10 mb-8">
-      <BohrModel :electron-shells="element.electronShells" :symbol="element.symbol" :color="element.color" :size="180" />
+      <BohrModel :electron-shells="element.electronShells" :symbol="element.symbol" :color="element.color" :size="bohrSize" />
 
       <div class="flex-1 text-center sm:text-left">
         <h1 class="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-1">{{ name }}</h1>
@@ -86,25 +98,25 @@ const risks = computed(() => {
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
       <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
         <span class="text-xs text-slate-400 dark:text-slate-500">{{ t('element.atomicNumber') }}</span>
-        <p class="text-lg font-semibold text-slate-900 dark:text-white">{{ element.atomicNumber }}</p>
+        <p class="text-lg font-semibold text-slate-900 dark:text-white font-mono">{{ element.atomicNumber }}</p>
       </div>
       <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
         <span class="text-xs text-slate-400 dark:text-slate-500">{{ t('element.group') }}</span>
-        <p class="text-lg font-semibold text-slate-900 dark:text-white">{{ element.group ?? '-' }}</p>
+        <p class="text-lg font-semibold text-slate-900 dark:text-white font-mono">{{ element.group ?? '-' }}</p>
       </div>
       <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
         <span class="text-xs text-slate-400 dark:text-slate-500">{{ t('element.period') }}</span>
-        <p class="text-lg font-semibold text-slate-900 dark:text-white">{{ element.period }}</p>
+        <p class="text-lg font-semibold text-slate-900 dark:text-white font-mono">{{ element.period }}</p>
       </div>
       <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
         <span class="text-xs text-slate-400 dark:text-slate-500">{{ t('element.block') }}</span>
-        <p class="text-lg font-semibold text-slate-900 dark:text-white">{{ element.block.toUpperCase() }}</p>
+        <p class="text-lg font-semibold text-slate-900 dark:text-white font-mono">{{ element.block.toUpperCase() }}</p>
       </div>
     </div>
 
     <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 mb-8">
       <h3 class="font-semibold text-slate-900 dark:text-white mb-2">{{ t('element.electronConfiguration') }}</h3>
-      <p class="text-base font-mono font-semibold text-mint-600 dark:text-mint-400 mb-3">{{ element.electronConfiguration }}</p>
+      <p class="text-base font-mono font-semibold text-mint-600 dark:text-mint-400 mb-3 break-all">{{ element.electronConfiguration }}</p>
       <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
         <h4 class="text-xs font-medium text-slate-500 dark:text-slate-400 mb-2">{{ t('element.orbitals') }}</h4>
         <OrbitalDiagram :configuration="element.electronConfiguration" />
@@ -114,27 +126,27 @@ const risks = computed(() => {
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
       <div v-if="element.electronegativity" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
         <span class="text-xs text-slate-400">{{ t('element.electronegativity') }}</span>
-        <p class="font-semibold text-slate-900 dark:text-white">{{ element.electronegativity }}</p>
+        <p class="font-semibold text-slate-900 dark:text-white font-mono">{{ element.electronegativity }}</p>
       </div>
       <div v-if="element.atomicRadius" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
         <span class="text-xs text-slate-400">{{ t('element.atomicRadius') }}</span>
-        <p class="font-semibold text-slate-900 dark:text-white">{{ element.atomicRadius }} pm</p>
+        <p class="font-semibold text-slate-900 dark:text-white font-mono">{{ element.atomicRadius }} pm</p>
       </div>
       <div v-if="element.ionizationEnergy" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
         <span class="text-xs text-slate-400">{{ t('element.ionizationEnergy') }}</span>
-        <p class="font-semibold text-slate-900 dark:text-white">{{ element.ionizationEnergy }} eV</p>
+        <p class="font-semibold text-slate-900 dark:text-white font-mono">{{ element.ionizationEnergy }} eV</p>
       </div>
       <div v-if="element.density" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
         <span class="text-xs text-slate-400">{{ t('element.density') }}</span>
-        <p class="font-semibold text-slate-900 dark:text-white">{{ element.density }} g/cm³</p>
+        <p class="font-semibold text-slate-900 dark:text-white font-mono">{{ element.density }} g/cm³</p>
       </div>
       <div v-if="element.meltingPoint" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
         <span class="text-xs text-slate-400">{{ t('element.meltingPoint') }}</span>
-        <p class="font-semibold text-slate-900 dark:text-white">{{ element.meltingPoint }} K</p>
+        <p class="font-semibold text-slate-900 dark:text-white font-mono">{{ element.meltingPoint }} K</p>
       </div>
       <div v-if="element.boilingPoint" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
         <span class="text-xs text-slate-400">{{ t('element.boilingPoint') }}</span>
-        <p class="font-semibold text-slate-900 dark:text-white">{{ element.boilingPoint }} K</p>
+        <p class="font-semibold text-slate-900 dark:text-white font-mono">{{ element.boilingPoint }} K</p>
       </div>
       <div v-if="element.oxidationStates" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
         <span class="text-xs text-slate-400">{{ t('element.oxidationStates') }}</span>

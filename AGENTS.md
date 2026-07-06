@@ -62,7 +62,8 @@ dist/                  # Built output (gitignored, deployed by Actions)
 - Hash router required for SPA routing on GitHub Pages
 
 ## Status (Jul 2026)
-### Changes this session
+
+### Completed — UI/UX Touch Target & Visual Polish (Fase 1 & 2)
 - **Mobile nav hamburger** — mobile (`< sm`) nav links hidden behind hamburger with dropdown
 - **Nav button styling** — nav buttons now have `bg-slate-100 dark:bg-slate-800 rounded-lg` background
 - **Landing page cards smaller** — reduced padding, gaps, font sizes for at-a-glance view
@@ -75,4 +76,15 @@ dist/                  # Built output (gitignored, deployed by Actions)
 - **Nav "Tabla periódica"** instead of "Explorar" + i18n key `app.tableLabel`
 - **Popover clickable** — "Detalles" button removed; whole card clickable; "Click para más info" hint
 - **Square logo** — `logoCuadrado.png` added (`public/`); used as favicon, apple-touch-icon, PWA manifest icons
-- **78 tests pass** (6 suites, 0 failures), build clean
+
+### In Progress — Test Suite Expansion (Fase 3)
+- **New test files added:**
+  - `src/test/components/OrbitalDiagram.test.ts` — 7 tests (parsing, labels, arrows, empty boxes)
+  - `src/test/components/games/ElectronConfig.test.ts` — 7 tests (intro, start, options, disabling, back)
+  - `src/test/components/games/ClassifyFamilies.test.ts` — 7 tests (intro, start, families, disabling, back, validation)
+  - `src/test/components/games/BuildAtom.test.ts` — 8 tests (intro, start, particles, options, hint, back, neutron calc)
+- **Existing tests updated:**
+  - `i18n.test.ts` — 6 tests (CA locale parity check added)
+  - `elements.test.ts` — 17 tests (type-level electronAffinity/imageUrl checks)
+  - `ElementTile.test.ts` — 13 tests (highlighted prop test added)
+- **113 tests pass** (10 suites, 0 failures), build clean

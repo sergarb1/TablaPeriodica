@@ -127,6 +127,7 @@
     "electronegativity": "Electronegativitat",
     "atomicRadius": "Radi atòmic",
     "ionizationEnergy": "Energia d'ionització",
+    "electronAffinity": "Afinidad electrònica",
     "valence": "València",
     "oxidationStates": "Estats d'oxidació",
     "density": "Densitat",
@@ -144,7 +145,10 @@
     "bohrModel": "Model de Bohr",
     "electronDistribution": "Distribució electrònica",
     "orbitals": "Diagrama d'orbitales",
-    "compare": "Comparar"
+    "compare": "Comparar",
+    "gallery": "Galeria",
+    "viewOnTable": "Veure en la taula",
+    "photoCredit": "Imatge representativa"
   },
   "learn": {
     "title": "Ruta d'aprenentatge",
@@ -216,8 +220,17 @@
     "completeTableDrag": "Arrossega els elements al seu lloc",
     "mistakes": "fallos",
     "sort": "Ordena",
-    "sortSubmit": "Confirmar ordre",
-    "groupGuess": "Endevina el grup/període"
+    "sortSubmit": "Confirmar orde",
+    "groupGuess": "Endevina el grup/període",
+    "blockGuess": "De quin bloc?",
+    "propertiesCompare": "Quin té major {prop}?",
+    "electronCount": "Quants electrons de valència?",
+    "configMatch": "Config → Element",
+    "propElectronegativity": "electronegativitat",
+    "propDensity": "densitat",
+    "propMass": "massa atòmica",
+    "propRadius": "radi atòmic",
+    "propIonization": "E. d'ionització"
   },
   "progress": {
     "title": "El teu progrés",
@@ -318,5 +331,16 @@
     "boilingPoint": "Punt d'ebullició",
     "value": "Valor",
     "legend": "Escala de color"
+  },
+  "compare": {
+    "elementA": "Element A",
+    "elementB": "Element B",
+    "searchPlaceholder": "Buscar element...",
+    "vs": "VS",
+    "mass": "Massa",
+    "radius": "Radi",
+    "ie": "EI",
+    "mp": "P.F.",
+    "bp": "P.E."
   }
 }

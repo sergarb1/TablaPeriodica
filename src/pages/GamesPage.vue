@@ -763,7 +763,7 @@ function cleanupCompleta() {
           </button>
         </template>
 
-        <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all" aria-live="polite">
+        <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all" aria-live="polite" role="alert">
           {{ totalQuestions >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}
         </button>
         <!-- Accessibility: announce new question type -->
@@ -940,7 +940,7 @@ function cleanupCompleta() {
               draggable="true"
               @dragstart="onDragStart($event, el.atomicNumber)"
               @dragend="completaDragEl = null"
-              class="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-lg flex items-center justify-center text-xs font-bold cursor-grab active:cursor-grabbing transition-all hover:scale-110 hover:shadow-md active:scale-95 select-none"
+              class="w-[42px] h-[42px] rounded-lg flex items-center justify-center text-sm font-bold cursor-grab active:cursor-grabbing transition-all hover:scale-110 hover:shadow-md active:scale-95 select-none"
               :style="{ backgroundColor: el.color + '30', color: el.color, border: '1px solid ' + el.color }"
             >
               {{ el.symbol }}

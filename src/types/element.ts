@@ -18,6 +18,7 @@ export interface ElementData {
   electronegativity: number | null
   atomicRadius: number | null
   ionizationEnergy: number | null
+  electronAffinity: number | null
   valence: number[]
   oxidationStates: string
   density: number | null
@@ -34,6 +35,7 @@ export interface ElementData {
   usesEn: string
   risksEs: string
   risksEn: string
+  imageUrl: string | null
   color: string
   x: number
   y: number

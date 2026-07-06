@@ -21,6 +21,11 @@ const selectedFamily = ref<string | null>((route.query.family as string) || null
 const showConfig = ref(false)
 const isFullscreen = ref(false)
 
+const highlightAtomic = computed(() => {
+  const h = route.query.highlight
+  return h ? Number(h) : null
+})
+
 const hoverEl = ref<ElementData | null>(null)
 const hoverPos = ref({ x: 0, y: 0 })
 const showPopover = ref(false)
@@ -92,7 +97,7 @@ function toggleFullscreen() {
 }
 
 const tileSizePx = computed(() => {
-  if (config.value.tileSize === 'compact') return 36
+  if (config.value.tileSize === 'compact') return 40
   if (config.value.tileSize === 'normal') return 48
   if (config.value.tileSize === 'comfortable') return 60
   return 80
@@ -115,7 +120,7 @@ function tileSize(el: ElementData) {
     <div v-if="!isFullscreen" class="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
       <div class="relative flex-1 w-full">
         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input v-model="query" :placeholder="t('app.search')" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-mint-500/50 dark:text-white" />
+        <input v-model="query" :placeholder="t('app.search')" :aria-label="t('app.search')" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-mint-500/50 dark:text-white" />
       </div>
       <div class="flex items-center gap-2 shrink-0">
         <button @click="toggleFullscreen" class="px-3 py-2 rounded-xl text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
@@ -151,7 +156,7 @@ function tileSize(el: ElementData) {
         <!-- Main 7 rows -->
         <div v-for="(row, ri) in gridRows" :key="'r'+ri" class="flex">
           <div v-for="(cell, ci) in row" :key="'c'+ri+'-'+ci" class="flex-shrink-0 flex items-center justify-center" :style="{ width: tileSizePx + 'px', height: tileSizePx + 'px', padding: tilePadding }">
-            <ElementTile v-if="cell" :element="cell" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(cell)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(cell.family, cell.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" />
+            <ElementTile v-if="cell" :element="cell" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(cell)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(cell.family, cell.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" :highlighted="cell.atomicNumber === highlightAtomic" />
           </div>
         </div>
 
@@ -159,11 +164,11 @@ function tileSize(el: ElementData) {
         <template v-if="config.fblockPosition === 'bottom'">
           <div v-if="fBlock.lanthanides.length" class="mt-2 flex items-center" :style="{ gap: tileSizePx <= 44 ? '2px' : '4px' }">
             <span class="flex-shrink-0 text-slate-400 dark:text-slate-500 text-right pr-1 text-xs flex items-center justify-end" :style="{ width: '36px', height: tileSizePx + 'px' }">57-71</span>
-            <ElementTile v-for="el in fBlock.lanthanides" :key="'lan'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" />
+            <ElementTile v-for="el in fBlock.lanthanides" :key="'lan'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" :highlighted="el.atomicNumber === highlightAtomic" />
           </div>
           <div v-if="fBlock.actinides.length" class="mt-1 flex items-center" :style="{ gap: tileSizePx <= 44 ? '2px' : '4px' }">
             <span class="flex-shrink-0 text-slate-400 dark:text-slate-500 text-right pr-1 text-xs flex items-center justify-end" :style="{ width: '36px', height: tileSizePx + 'px' }">89-103</span>
-            <ElementTile v-for="el in fBlock.actinides" :key="'act'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" />
+            <ElementTile v-for="el in fBlock.actinides" :key="'act'+el.atomicNumber" :element="el" @click="openElement" @hover="onTileHover" @leave="onTileLeave" :size="tileSize(el)" :noAnim="!config.animations" :tileTheme="themeType" :familyColor="getColor(el.family, el.color)" :labelMode="config.labelMode" :tilePx="innerTilePx" :showNumber="config.showAtomicNumber" :highlighted="el.atomicNumber === highlightAtomic" />
           </div>
         </template>
       </div>
@@ -171,8 +176,8 @@ function tileSize(el: ElementData) {
 
     <!-- Legend (compact) -->
     <div v-if="!isFullscreen" class="mt-4 flex flex-wrap gap-2 justify-center">
-      <span v-for="f in families" :key="f" class="inline-flex items-center gap-1 text-[0.55rem] text-slate-400">
-        <span class="w-2 h-2 rounded-sm inline-block" :style="{ backgroundColor: getColor(f, getFamily(f)?.color || '#666') }" />
+      <span v-for="f in families" :key="f" class="inline-flex items-center gap-1.5 text-xs text-slate-400">
+        <span class="w-3 h-3 rounded-sm inline-block shrink-0" :style="{ backgroundColor: getColor(f, getFamily(f)?.color || '#666') }" />
         {{ t('table.' + FAMILY_LABEL[f]) }}
       </span>
     </div>

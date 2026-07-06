@@ -14,6 +14,7 @@ const props = defineProps<{
   labelMode?: 'symbol' | 'name' | 'both'
   tilePx?: number
   showNumber?: boolean
+  highlighted?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -138,6 +139,7 @@ const tileStyle = computed(() => {
       tileTheme === 'fill' ? 'shadow-md' : '',
       tileTheme === 'light' ? 'shadow-sm' : '',
       props.noAnim ? 'opacity-100 scale-100' : '',
+      highlighted ? 'ring-2 ring-mint-400 ring-offset-1 dark:ring-offset-slate-900 z-20' : '',
     ]"
     :style="tileStyle"
   >
