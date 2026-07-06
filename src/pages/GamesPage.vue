@@ -10,7 +10,7 @@ const { progress, addXp, addCorrect, addIncorrect, addGamePlayed } = useProgress
 const { t, locale } = useI18n()
 
 const allElements = getAll()
-type GameMode = 'quiz' | 'memory' | 'speed' | null
+type GameMode = 'quiz' | 'memory' | 'speed' | 'completa' | null
 const activeMode = ref<GameMode>(null)
 
 // Question types for quiz variety
@@ -32,6 +32,7 @@ const gamesList = [
   { id: 'quiz' as const, icon: '🤔', title: 'Adivina el elemento', desc: '10 preguntas con pistas y XP por racha', gradient: 'from-amber-500 to-orange-500', color: 'amber' },
   { id: 'memory' as const, icon: '🧠', title: 'Memoria', desc: 'Empareja símbolo ↔ nombre · 8 elementos', gradient: 'from-purple-500 to-violet-500', color: 'purple' },
   { id: 'speed' as const, icon: '⚡', title: 'Contrarreloj', desc: '60 segundos · responde lo más rápido posible', gradient: 'from-red-500 to-rose-500', color: 'red' },
+  { id: 'completa' as const, icon: '🧩', title: 'Completa la tabla', desc: 'Arrastra cada elemento a su posición', gradient: 'from-blue-500 to-cyan-500', color: 'blue' },
 ]
 
 // ----- GUESS THE ELEMENT (Quiz) -----
@@ -329,11 +330,123 @@ function endSpeed() {
   addGamePlayed()
 }
 
+// ----- COMPLETA LA TABLA GAME -----
+const completaTargetZ = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+const completaTarget = computed(() => allElements.filter(e => completaTargetZ.includes(e.atomicNumber)))
+const completaGrid = ref<(ElementData | null)[][]>([])
+const completaPool = ref<ElementData[]>([])
+const completaPlaced = ref<number[]>([])
+const completaScore = ref(0)
+const completaMistakes = ref(0)
+const completaStarted = ref(false)
+const completaDone = ref(false)
+const completaTime = ref(0)
+let completaTimer: ReturnType<typeof setInterval> | null = null
+const completaDragEl = ref<number | null>(null)
+
+function startCompleta() {
+  const els = [...completaTarget.value]
+  completaPlaced.value = []
+  completaScore.value = 0
+  completaMistakes.value = 0
+  completaTime.value = 0
+  completaDone.value = false
+  completaStarted.value = true
+
+  const grid: (ElementData | null)[][] = []
+  for (let y = 1; y <= 7; y++) {
+    const row: (ElementData | null)[] = new Array(18).fill(null)
+    for (const e of els) {
+      if (e.y === y && e.x >= 1 && e.x <= 18) {
+        row[e.x - 1] = e
+      }
+    }
+    grid.push(row)
+  }
+  completaGrid.value = grid
+
+  const shuffled = [...els].sort(() => Math.random() - 0.5)
+  completaPool.value = shuffled
+
+  completaTimer = setInterval(() => { completaTime.value++ }, 1000)
+}
+
+function completaDrop(z: number, gridX: number, gridY: number) {
+  const el = allElements.find(e => e.atomicNumber === z)
+  if (!el) return false
+  if (el.x === gridX && el.y === gridY) {
+    if (!completaPlaced.value.includes(z)) {
+      completaPlaced.value.push(z)
+      completaPool.value = completaPool.value.filter(e => e.atomicNumber !== z)
+      completaScore.value += 10
+      addCorrect()
+      const newGrid = [...completaGrid.value]
+      const row = [...newGrid[gridY - 1]]
+      row[gridX - 1] = el
+      newGrid[gridY - 1] = row
+      completaGrid.value = newGrid
+      if (completaPlaced.value.length === completaTargetZ.length) {
+        endCompleta()
+      }
+    }
+    return true
+  }
+  return false
+}
+
+function completaDropFail() {
+  completaMistakes.value++
+  addIncorrect()
+}
+
+function endCompleta() {
+  if (completaTimer) { clearInterval(completaTimer); completaTimer = null }
+  completaDone.value = true
+  const bonus = Math.max(0, 100 - completaTime.value)
+  addXp(completaScore.value + bonus)
+  addGamePlayed()
+}
+
+function isCompletaCellPopulated(y: number, x: number) {
+  return completaPlaced.value.some(z => {
+    const el = allElements.find(e => e.atomicNumber === z)
+    return el && el.x === x && el.y === y
+  })
+}
+
+function onDragStart(e: DragEvent, z: number) {
+  completaDragEl.value = z
+  if (e.dataTransfer) {
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', String(z))
+  }
+}
+
+function onDragOver(e: DragEvent) {
+  e.preventDefault()
+  if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+}
+
+function onDrop(e: DragEvent, x: number, y: number) {
+  e.preventDefault()
+  const z = parseInt(e.dataTransfer?.getData('text/plain') || '')
+  if (!z) return
+  if (!completaDrop(z, x, y)) {
+    completaDropFail()
+  }
+  completaDragEl.value = null
+}
+
 watch(activeMode, () => {
   if (speedTimer) { clearInterval(speedTimer); speedTimer = null }
+  if (completaTimer) { clearInterval(completaTimer); completaTimer = null }
 })
 
 function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.nameEn }
+
+function cleanupCompleta() {
+  if (completaTimer) { clearInterval(completaTimer); completaTimer = null }
+}
 </script>
 
 <template>
@@ -530,7 +643,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
     </template>
 
     <!-- ===== SPEED MODE ===== -->
-    <template v-else>
+    <template v-else-if="activeMode === 'speed'">
       <button @click="activeMode = null" class="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors mb-4">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
         {{ t('games.backToGames') }}
@@ -581,6 +694,89 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
               'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600']">
             <span class="font-mono">{{ getOptionLabel(opt) }}</span>
           </button>
+        </div>
+      </div>
+    </template>
+
+    <!-- ===== COMPLETA LA TABLA ===== -->
+    <template v-else-if="activeMode === 'completa'">
+      <button @click="activeMode = null; cleanupCompleta()" class="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors mb-4">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+        {{ t('games.backToGames') }}
+      </button>
+
+      <div v-if="!completaStarted" class="text-center py-12" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }">
+        <div class="w-16 h-16 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-6">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.completeTable') }}</h2>
+        <p class="text-sm text-slate-400 mb-2">{{ t('games.completeTableDesc') }}</p>
+        <p class="text-xs text-slate-400 mb-6">{{ t('games.completeTableEasy') }}</p>
+        <button @click="startCompleta" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
+      </div>
+
+      <div v-else-if="completaDone" class="text-center py-12" v-motion :initial="{ scale: 0.9, opacity: 0 }" :visible="{ scale: 1, opacity: 1 }">
+        <div class="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.youWon') }}</h2>
+        <p class="text-sm text-slate-400 mb-4">{{ completaScore }} pts · {{ completaTime }}s · {{ completaMistakes }} {{ t('games.mistakes') }}</p>
+        <button @click="startCompleta" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
+      </div>
+
+      <div v-else v-motion :initial="{ opacity: 0 }" :visible="{ opacity: 1 }">
+        <!-- Timer + stats -->
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="text-sm font-bold font-mono">{{ completaTime }}s</span>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="text-mint-500 font-medium">{{ completaPlaced.length }}/{{ completaTargetZ.length }}</span>
+            <span v-if="completaMistakes > 0" class="text-red-400">{{ completaMistakes }} {{ t('games.mistakes') }}</span>
+          </div>
+        </div>
+
+        <!-- Drop grid -->
+        <div class="flex justify-center mb-4 overflow-auto">
+          <div class="inline-flex flex-col gap-[1px]">
+            <div v-for="(row, ri) in completaGrid" :key="'r'+ri" class="flex gap-[1px]">
+              <div v-for="(cell, ci) in row" :key="'c'+ri+'-'+ci"
+                @dragover="onDragOver"
+                @drop="onDrop($event, ci + 1, ri + 1)"
+                :class="[
+                  'w-[34px] h-[34px] sm:w-[42px] sm:h-[42px] rounded flex items-center justify-center text-xs font-bold transition-all',
+                  cell && completaPlaced.includes(cell.atomicNumber)
+                    ? 'bg-mint-100 dark:bg-mint-900/50 text-mint-700 dark:text-mint-300 shadow-inner'
+                    : cell && !completaPlaced.includes(cell.atomicNumber)
+                    ? 'border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50'
+                    : 'bg-slate-50/50 dark:bg-slate-900/30'
+                ]"
+              >
+                <template v-if="cell && completaPlaced.includes(cell.atomicNumber)">
+                  <span>{{ cell.symbol }}</span>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Draggable pool -->
+        <div class="max-w-lg mx-auto">
+          <p class="text-xs text-slate-400 mb-2 text-center">{{ t('games.completeTableDrag') }}</p>
+          <div class="flex flex-wrap justify-center gap-1.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 min-h-[60px]">
+            <div
+              v-for="el in completaPool"
+              :key="el.atomicNumber"
+              draggable="true"
+              @dragstart="onDragStart($event, el.atomicNumber)"
+              @dragend="completaDragEl = null"
+              class="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-lg flex items-center justify-center text-xs font-bold cursor-grab active:cursor-grabbing transition-all hover:scale-110 hover:shadow-md active:scale-95 select-none"
+              :style="{ backgroundColor: el.color + '30', color: el.color, border: '1px solid ' + el.color }"
+            >
+              {{ el.symbol }}
+            </div>
+          </div>
         </div>
       </div>
     </template>

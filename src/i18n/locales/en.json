@@ -210,7 +210,11 @@
     "true": "True",
     "false": "False",
     "fillBlank": "Fill in the blank",
-    "fillBlankHint": "Type your answer..."
+    "fillBlankHint": "Type your answer...",
+    "completeTableDesc": "Drag each element below to its correct position on the table",
+    "completeTableEasy": "First 20 elements (H → Ca)",
+    "completeTableDrag": "Drag elements to their place",
+    "mistakes": "mistakes"
   },
   "progress": {
     "title": "Your progress",

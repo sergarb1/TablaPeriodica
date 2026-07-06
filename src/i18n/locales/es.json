@@ -210,7 +210,11 @@
     "true": "Verdadero",
     "false": "Falso",
     "fillBlank": "Completa el hueco",
-    "fillBlankHint": "Escribe tu respuesta..."
+    "fillBlankHint": "Escribe tu respuesta...",
+    "completeTableDesc": "Arrastra cada elemento de abajo a su posición correcta en la tabla",
+    "completeTableEasy": "Primeros 20 elementos (H → Ca)",
+    "completeTableDrag": "Arrastra los elementos a su lugar",
+    "mistakes": "fallos"
   },
   "progress": {
     "title": "Tu progreso",
