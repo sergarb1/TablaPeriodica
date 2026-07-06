@@ -214,7 +214,10 @@
     "completeTableDesc": "Drag each element below to its correct position on the table",
     "completeTableEasy": "First 20 elements (H → Ca)",
     "completeTableDrag": "Drag elements to their place",
-    "mistakes": "mistakes"
+    "mistakes": "mistakes",
+    "sort": "Sort",
+    "sortSubmit": "Confirm order",
+    "groupGuess": "Guess the group/period"
   },
   "progress": {
     "title": "Your progress",

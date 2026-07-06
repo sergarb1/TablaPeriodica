@@ -10,35 +10,107 @@ const elements = elementsData as ElementData[]
 const families = [...new Set(elements.map(e => e.family).filter(Boolean))] as string[]
 const selectedFamily = ref<string>('')
 
-const filteredElements = computed(() =>
-  selectedFamily.value
+interface SM2Card {
+  n: number
+  interval: number
+  ef: number
+  nextReview: string
+}
+
+function loadSM2(): Record<number, SM2Card> {
+  try { return JSON.parse(localStorage.getItem('flashcards_sm2') || '{}') } catch { return {} }
+}
+function saveSM2(data: Record<number, SM2Card>) {
+  localStorage.setItem('flashcards_sm2', JSON.stringify(data))
+}
+
+const sm2Data = ref<Record<number, SM2Card>>(loadSM2())
+
+const today = new Date().toISOString().split('T')[0]
+
+const filteredElements = computed(() => {
+  let pool = selectedFamily.value
     ? elements.filter(e => e.family === selectedFamily.value)
-    : elements
-)
+    : [...elements]
+
+  // Sort by SM-2 priority: due first, then by interval ascending
+  pool.sort((a, b) => {
+    const aData = sm2Data.value[a.atomicNumber]
+    const bData = sm2Data.value[b.atomicNumber]
+    const aDue = aData && aData.nextReview <= today ? 0 : 1
+    const bDue = bData && bData.nextReview <= today ? 0 : 1
+    if (aDue !== bDue) return aDue - bDue
+    const aInt = aData?.interval ?? 0
+    const bInt = bData?.interval ?? 0
+    if (aInt !== bInt) return aInt - bInt
+    return a.atomicNumber - b.atomicNumber
+  })
+
+  return pool
+})
 
 const currentIndex = ref(0)
 const flipped = ref(false)
+
 const knownElements = ref<Set<number>>(new Set(JSON.parse(localStorage.getItem('flashcards_known') || '[]')))
 const unknownElements = ref<Set<number>>(new Set(JSON.parse(localStorage.getItem('flashcards_unknown') || '[]')))
 
 const currentCard = computed(() => filteredElements.value[currentIndex.value])
+const dueCount = computed(() => filteredElements.value.filter(e => {
+  const d = sm2Data.value[e.atomicNumber]
+  return !d || d.nextReview <= today
+}).length)
+
+function getSM2(z: number): SM2Card {
+  return sm2Data.value[z] || { n: 0, interval: 0, ef: 2.5, nextReview: today }
+}
+
+function updateSM2(z: number, quality: number) {
+  const card = getSM2(z)
+  if (quality >= 3) {
+    // Good recall
+    if (card.n === 0) card.interval = 1
+    else if (card.n === 1) card.interval = 6
+    else card.interval = Math.round(card.interval * card.ef)
+    card.n++
+  } else {
+    // Poor recall - reset
+    card.n = 0
+    card.interval = 1
+  }
+  card.ef = Math.max(1.3, card.ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)))
+  const next = new Date()
+  next.setDate(next.getDate() + card.interval)
+  card.nextReview = next.toISOString().split('T')[0]
+  sm2Data.value[z] = card
+  saveSM2(sm2Data.value)
+}
 
 function flip() { flipped.value = !flipped.value }
 
 function markKnown() {
   if (!currentCard.value) return
-  knownElements.value.add(currentCard.value.atomicNumber)
-  unknownElements.value.delete(currentCard.value.atomicNumber)
-  save()
+  const z = currentCard.value.atomicNumber
+  knownElements.value.add(z)
+  unknownElements.value.delete(z)
+  updateSM2(z, 4)
+  saveStats()
   next()
 }
 
 function markUnknown() {
   if (!currentCard.value) return
-  unknownElements.value.add(currentCard.value.atomicNumber)
-  knownElements.value.delete(currentCard.value.atomicNumber)
-  save()
+  const z = currentCard.value.atomicNumber
+  unknownElements.value.add(z)
+  knownElements.value.delete(z)
+  updateSM2(z, 1)
+  saveStats()
   next()
+}
+
+function saveStats() {
+  localStorage.setItem('flashcards_known', JSON.stringify([...knownElements.value]))
+  localStorage.setItem('flashcards_unknown', JSON.stringify([...unknownElements.value]))
 }
 
 function next() {
@@ -68,18 +140,22 @@ function shuffle() {
 function resetProgress() {
   knownElements.value.clear()
   unknownElements.value.clear()
-  save()
+  sm2Data.value = {}
+  saveSM2({})
+  saveStats()
   currentIndex.value = 0
-}
-
-function save() {
-  localStorage.setItem('flashcards_known', JSON.stringify([...knownElements.value]))
-  localStorage.setItem('flashcards_unknown', JSON.stringify([...unknownElements.value]))
 }
 
 function name(el: ElementData) {
   return locale.value === 'es' ? el.nameEs : el.nameEn
 }
+
+const nextReviewLabel = computed(() => {
+  if (!currentCard.value) return ''
+  const d = getSM2(currentCard.value.atomicNumber)
+  if (d.interval === 0) return 'Nou'
+  return d.nextReview === today ? 'Hui' : new Date(d.nextReview) < new Date(today) ? `Fa ${Math.round((Date.now() - new Date(d.nextReview).getTime()) / 86400000)} dies` : d.nextReview
+})
 </script>
 
 <template>
@@ -105,7 +181,10 @@ function name(el: ElementData) {
         </button>
       </div>
 
-      <div class="text-center text-[0.55rem] text-slate-400 mb-2">{{ currentIndex + 1 }} / {{ filteredElements.length }}</div>
+      <div class="text-center text-[0.55rem] text-slate-400 mb-2">
+        <span>{{ currentIndex + 1 }} / {{ filteredElements.length }}</span>
+        <span v-if="dueCount < filteredElements.length" class="ml-2">· {{ dueCount }} {{ t('flashcards.due') || 'pendents' }}</span>
+      </div>
 
       <div class="aspect-[3/4] max-h-[280px] cursor-pointer perspective-1000 mb-3" @click="flip">
         <div class="relative w-full h-full transition-transform duration-[600ms] preserve-3d" :class="{ 'rotate-y-180': flipped }">
@@ -128,6 +207,7 @@ function name(el: ElementData) {
               <p v-if="currentCard.atomicRadius" class="text-[0.55rem] text-slate-400">{{ t('element.atomicRadius') }}: {{ currentCard.atomicRadius }} pm</p>
               <p class="text-[0.5rem] text-slate-500 italic">{{ currentCard.familyEs }} / {{ currentCard.familyEn }}</p>
               <p class="text-[0.5rem] text-slate-400">{{ currentCard.group ? `G. ${currentCard.group}` : '' }} · P. {{ currentCard.period }} · {{ currentCard.block }}-block</p>
+              <p class="text-[0.45rem] text-slate-400 mt-1 border-t border-slate-200 dark:border-slate-700 pt-1">{{ t('flashcards.nextReview') || 'Pròxima revisió' }}: {{ nextReviewLabel }}</p>
             </div>
           </div>
         </div>

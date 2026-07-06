@@ -214,7 +214,10 @@
     "completeTableDesc": "Arrastra cada elemento de abajo a su posición correcta en la tabla",
     "completeTableEasy": "Primeros 20 elementos (H → Ca)",
     "completeTableDrag": "Arrastra los elementos a su lugar",
-    "mistakes": "fallos"
+    "mistakes": "fallos",
+    "sort": "Ordena",
+    "sortSubmit": "Confirmar orden",
+    "groupGuess": "Adivina el grupo/período"
   },
   "progress": {
     "title": "Tu progreso",

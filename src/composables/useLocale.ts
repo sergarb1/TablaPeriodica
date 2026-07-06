@@ -6,7 +6,7 @@ export function useLocale() {
   const setLocale = (lang: string) => {
     locale.value = lang
     localStorage.setItem('locale', lang)
-    document.documentElement.lang = lang === 'es' ? 'es' : 'en'
+    document.documentElement.lang = lang === 'ca' ? 'ca' : lang === 'es' ? 'es' : 'en'
   }
 
   return {

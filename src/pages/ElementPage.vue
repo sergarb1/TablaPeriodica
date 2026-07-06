@@ -5,6 +5,7 @@ import { useElement } from '@/composables/useElement'
 import { useProgress } from '@/composables/useProgress'
 import { useI18n } from 'vue-i18n'
 import BohrModel from '@/components/BohrModel.vue'
+import OrbitalDiagram from '@/components/OrbitalDiagram.vue'
 import type { ElementData } from '@/types'
 
 const route = useRoute()
@@ -103,7 +104,11 @@ const risks = computed(() => {
 
     <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 mb-8">
       <h3 class="font-semibold text-slate-900 dark:text-white mb-2">{{ t('element.electronConfiguration') }}</h3>
-      <p class="text-base font-mono font-semibold text-mint-600 dark:text-mint-400">{{ element.electronConfiguration }}</p>
+      <p class="text-base font-mono font-semibold text-mint-600 dark:text-mint-400 mb-3">{{ element.electronConfiguration }}</p>
+      <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
+        <h4 class="text-xs font-medium text-slate-500 dark:text-slate-400 mb-2">{{ t('element.orbitals') }}</h4>
+        <OrbitalDiagram :configuration="element.electronConfiguration" />
+      </div>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">

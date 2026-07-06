@@ -4,17 +4,20 @@ import { useElement } from '@/composables/useElement'
 import { useProgress } from '@/composables/useProgress'
 import { useI18n } from 'vue-i18n'
 import type { ElementData } from '@/types'
+import ClassifyFamilies from '@/components/games/ClassifyFamilies.vue'
+import BuildAtom from '@/components/games/BuildAtom.vue'
+import ElectronConfig from '@/components/games/ElectronConfig.vue'
 
 const { getAll, getByNumber } = useElement()
 const { progress, addXp, addCorrect, addIncorrect, addGamePlayed } = useProgress()
 const { t, locale } = useI18n()
 
 const allElements = getAll()
-type GameMode = 'quiz' | 'memory' | 'speed' | 'completa' | null
+type GameMode = 'quiz' | 'memory' | 'speed' | 'completa' | 'classify' | 'build-atom' | 'electron-config' | null
 const activeMode = ref<GameMode>(null)
 
 // Question types for quiz variety
-const questionTypes = ['hints', 'symbol-to-name', 'name-to-symbol', 'true-false', 'fill-blank'] as const
+const questionTypes = ['hints', 'symbol-to-name', 'name-to-symbol', 'true-false', 'fill-blank', 'group-guess', 'sort-elements'] as const
 type QuestionType = typeof questionTypes[number]
 const currentQType = ref<QuestionType>('hints')
 
@@ -28,11 +31,27 @@ const fbBlankPrompt = ref('')
 const fbUserInput = ref('')
 const fbSubmitted = ref(false)
 
+// Group-guess state
+const ggTarget = ref<{ element: ElementData; property: 'group' | 'period' } | null>(null)
+const ggOptions = ref<number[]>([])
+const ggCorrect = ref<number>(0)
+
+// Sort-elements state
+const sortElements = ref<ElementData[]>([])
+const sortProperty = ref<'atomicNumber' | 'atomicMass' | 'electronegativity' | 'density' | 'meltingPoint'>('atomicNumber')
+const sortOrder = ref<'asc' | 'desc'>('asc')
+const sortAnswered = ref(false)
+const sortSelected = ref<number[]>([])
+const sortMessage = ref('')
+
 const gamesList = [
   { id: 'quiz' as const, icon: '🤔', title: 'Adivina el elemento', desc: '10 preguntas con pistas y XP por racha', gradient: 'from-amber-500 to-orange-500', color: 'amber' },
   { id: 'memory' as const, icon: '🧠', title: 'Memoria', desc: 'Empareja símbolo ↔ nombre · 8 elementos', gradient: 'from-purple-500 to-violet-500', color: 'purple' },
   { id: 'speed' as const, icon: '⚡', title: 'Contrarreloj', desc: '60 segundos · responde lo más rápido posible', gradient: 'from-red-500 to-rose-500', color: 'red' },
   { id: 'completa' as const, icon: '🧩', title: 'Completa la tabla', desc: 'Arrastra cada elemento a su posición', gradient: 'from-blue-500 to-cyan-500', color: 'blue' },
+  { id: 'classify' as const, icon: '🏷️', title: 'Clasifica por familias', desc: 'Assigna cada element a la seua família', gradient: 'from-teal-500 to-emerald-500', color: 'teal' },
+  { id: 'build-atom' as const, icon: '⚛️', title: 'Construye un átomo', desc: 'Endevina l\'element: protons, neutrons, electrons', gradient: 'from-orange-500 to-amber-500', color: 'orange' },
+  { id: 'electron-config' as const, icon: '🔬', title: 'Configuració electrònica', desc: 'Endevina l\'element per la seua configuració', gradient: 'from-violet-500 to-purple-500', color: 'violet' },
 ]
 
 // ----- GUESS THE ELEMENT (Quiz) -----
@@ -98,6 +117,72 @@ function generateFillBlank(element: ElementData) {
   fbAnswer.value = pick.answer.toLowerCase()
 }
 
+function generateGroupGuess(element: ElementData) {
+  const property = Math.random() > 0.5 ? 'group' as const : 'period' as const
+  ggTarget.value = { element, property }
+  const correctVal = property === 'group' ? element.group ?? 0 : element.period
+  ggCorrect.value = correctVal
+
+  const pool = [correctVal]
+  while (pool.length < 4) {
+    const r = property === 'group' ? Math.floor(Math.random() * 18) + 1 : Math.floor(Math.random() * 7) + 1
+    if (!pool.includes(r)) pool.push(r)
+  }
+  pool.sort(() => Math.random() - 0.5)
+  ggOptions.value = pool
+}
+
+function generateSortElements() {
+  const props = ['atomicNumber', 'atomicMass', 'electronegativity', 'density', 'meltingPoint'] as const
+  sortProperty.value = props[Math.floor(Math.random() * props.length)]
+  sortOrder.value = Math.random() > 0.5 ? 'asc' : 'desc'
+
+  const pool = getAll().filter(e => {
+    const v = e[sortProperty.value]
+    return v !== null && v !== undefined && v !== '' && e.atomicNumber <= 86
+  })
+  const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, 4)
+  sortElements.value = shuffled
+  sortSelected.value = []
+  sortAnswered.value = false
+  sortMessage.value = ''
+}
+
+function selectSortElement(idx: number) {
+  if (sortAnswered.value) return
+  if (sortSelected.value.includes(idx)) {
+    sortSelected.value = sortSelected.value.filter(i => i !== idx)
+  } else {
+    sortSelected.value = [...sortSelected.value, idx]
+  }
+}
+
+function submitSort() {
+  if (sortAnswered.value || sortSelected.value.length !== 4) return
+  sortAnswered.value = true
+  answered.value = true
+  const sorted = [...sortElements.value].sort((a, b) => {
+    const va = a[sortProperty.value] as number
+    const vb = b[sortProperty.value] as number
+    return sortOrder.value === 'asc' ? va - vb : vb - va
+  })
+  const correct = sortSelected.value.every((idx, i) => sortElements.value[idx].atomicNumber === sorted[i].atomicNumber)
+  if (correct) {
+    addCorrect()
+    streak.value++
+    if (streak.value > bestStreak.value) bestStreak.value = streak.value
+    correctCount.value++
+    const xp = 20
+    addXp(xp)
+    score.value += xp
+    sortMessage.value = '✓ ' + t('learn.correct')
+  } else {
+    addIncorrect()
+    streak.value = 0
+    sortMessage.value = '✗ ' + t('learn.incorrect') + '. Ordre correcte: ' + sorted.map(e => e.symbol).join(' → ')
+  }
+}
+
 function pickQuestion() {
   const pool = allElements.filter(e => e.nameEs && e.nameEn && e.atomicNumber <= 103)
   const idx = Math.floor(Math.random() * pool.length)
@@ -109,13 +194,16 @@ function pickQuestion() {
     currentQType.value = 'hints'
   }
 
-  // Hints mode
   if (currentQType.value === 'true-false') {
     generateTF(correct)
   } else if (currentQType.value === 'fill-blank') {
     generateFillBlank(correct)
     fbUserInput.value = ''
     fbSubmitted.value = false
+  } else if (currentQType.value === 'group-guess') {
+    generateGroupGuess(correct)
+  } else if (currentQType.value === 'sort-elements') {
+    generateSortElements()
   } else {
     const others = pool.filter(e => e.atomicNumber !== correct.atomicNumber)
     const shuffled = [correct]
@@ -177,6 +265,25 @@ function selectTF(answer: boolean) {
   }
 }
 
+function selectGroupGuess(val: number) {
+  if (answered.value) return
+  answered.value = true
+  selectedAnswer.value = val
+  const correct = val === ggCorrect.value
+  if (correct) {
+    addCorrect()
+    streak.value++
+    if (streak.value > bestStreak.value) bestStreak.value = streak.value
+    correctCount.value++
+    const xpGain = 10 + streak.value * 2
+    addXp(xpGain)
+    score.value += xpGain
+  } else {
+    addIncorrect()
+    streak.value = 0
+  }
+}
+
 function submitFillBlank() {
   if (answered.value) return
   answered.value = true
@@ -198,6 +305,8 @@ function submitFillBlank() {
 
 function nextQuestion() {
   if (totalQuestions.value >= 10) { gameOver.value = true; addGamePlayed(); return }
+  // Reset sort state for next question
+  sortMessage.value = ''
   pickQuestion()
 }
 
@@ -440,6 +549,9 @@ function onDrop(e: DragEvent, x: number, y: number) {
 watch(activeMode, () => {
   if (speedTimer) { clearInterval(speedTimer); speedTimer = null }
   if (completaTimer) { clearInterval(completaTimer); completaTimer = null }
+  if (activeMode.value === null || ['classify','build-atom','electron-config'].includes(activeMode.value)) {
+    // Reset any sub-component state
+  }
 })
 
 function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.nameEn }
@@ -457,11 +569,11 @@ function cleanupCompleta() {
         <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t('games.title') }}</h1>
         <p class="text-sm text-slate-500">{{ t('games.subtitle') }}</p>
       </div>
-      <div class="grid gap-4 sm:grid-cols-3">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <button v-for="(g, i) in gamesList" :key="g.id" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="100 + i * 80" @click="activeMode = g.id" class="group relative overflow-hidden p-6 rounded-2xl text-left text-white transition-all hover:shadow-xl hover:scale-[1.03] active:scale-[0.97] bg-gradient-to-br" :class="g.gradient">
           <div class="relative z-10">
             <div class="text-4xl mb-3">{{ g.icon }}</div>
-            <h2 class="text-lg font-bold mb-1">{{ g.id === 'speed' ? (t('games.speedQuiz') || g.title) : g.title }}</h2>
+            <h2 class="text-lg font-bold mb-1">{{ g.id === 'quiz' ? t('games.guessElement') : g.id === 'speed' ? (t('games.speedQuiz') || g.title) : g.title }}</h2>
             <p class="text-xs text-white/80">{{ g.desc }}</p>
           </div>
           <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
@@ -598,9 +710,66 @@ function cleanupCompleta() {
           </button>
         </template>
 
-        <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all">
+        <!-- GROUP-GUESS question type -->
+        <template v-else-if="currentQType === 'group-guess' && ggTarget">
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 mb-4 text-center">
+            <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">{{ ggTarget.property === 'group' ? t('element.group') : t('element.period') }}</p>
+            <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-2 font-bold text-xl" :style="{ backgroundColor: ggTarget.element.color + '30', color: ggTarget.element.color }">{{ ggTarget.element.symbol }}</div>
+            <p class="text-lg font-bold text-slate-900 dark:text-white">{{ getDisplay(ggTarget.element) }}</p>
+            <p class="text-xs text-slate-400 mt-1">Z = {{ ggTarget.element.atomicNumber }}</p>
+            <p class="text-sm text-slate-500 mt-2">{{ ggTarget.property === 'group' ? '¿En qué grupo está?' : '¿En qué período está?' }}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button v-for="val in ggOptions" :key="val" @click="selectGroupGuess(val)" :disabled="answered"
+              :class="['px-4 py-3 rounded-xl border font-medium text-sm transition-all',
+                answered && val === ggCorrect ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30 text-mint-700 dark:text-mint-300' :
+                answered && val === selectedAnswer ? 'border-red-400 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300' :
+                'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600',
+                answered ? 'cursor-default' : 'cursor-pointer hover:shadow-sm active:scale-[0.99]']">
+              {{ val }}
+            </button>
+          </div>
+        </template>
+
+        <!-- SORT-ELEMENTS question type -->
+        <template v-else-if="currentQType === 'sort-elements' && sortElements.length">
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 mb-4 text-center">
+            <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">{{ t('games.sort') || 'Ordena' }}</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Ordena de {{ sortOrder === 'asc' ? 'menor a mayor' : 'mayor a menor' }} por
+              <span class="font-semibold text-slate-900 dark:text-white">
+                {{ sortProperty === 'atomicNumber' ? 'Z' : sortProperty === 'atomicMass' ? 'masa' : sortProperty === 'electronegativity' ? 'EN' : sortProperty === 'density' ? 'densidad' : 'P. fusión' }}
+              </span>
+            </p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button v-for="(el, i) in sortElements" :key="el.atomicNumber" @click="selectSortElement(i)" :disabled="sortAnswered"
+              :class="['px-4 py-3 rounded-xl border font-medium text-sm transition-all text-left',
+                sortSelected.includes(i) ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30 text-mint-700 dark:text-mint-300 ring-2 ring-mint-400/50' :
+                'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600',
+                sortAnswered ? 'cursor-default' : 'cursor-pointer hover:shadow-sm active:scale-[0.99]']">
+              <span class="font-mono">{{ el.symbol }} — {{ getDisplay(el) }}</span>
+              <span class="text-xs text-slate-400 ml-2">{{ el.atomicNumber }}</span>
+              <span v-if="sortAnswered" class="float-right text-xs" :class="sortMessage.startsWith('✓') ? 'text-mint-500' : 'text-red-500'">
+                {{ sortSelected.indexOf(i) + 1 }}
+              </span>
+            </button>
+          </div>
+          <div v-if="sortMessage" class="mt-2 text-sm font-medium text-center" :class="sortMessage.startsWith('✓') ? 'text-mint-600' : 'text-red-500'">
+            {{ sortMessage }}
+          </div>
+          <button v-if="!sortAnswered && sortSelected.length === 4" @click="submitSort" class="mt-3 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all">
+            {{ t('games.sortSubmit') || 'Confirmar orden' }}
+          </button>
+        </template>
+
+        <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all" aria-live="polite">
           {{ totalQuestions >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}
         </button>
+        <!-- Accessibility: announce new question type -->
+        <div aria-live="polite" class="sr-only">
+          <template v-if="answered && currentQType === 'hints' && currentElement">{{ t('games.correctAnswers') }}: {{ getDisplay(currentElement) }}</template>
+        </div>
       </div>
     </template>
 
@@ -779,6 +948,21 @@ function cleanupCompleta() {
           </div>
         </div>
       </div>
+    </template>
+
+    <!-- ===== CLASIFICA POR FAMILIAS ===== -->
+    <template v-else-if="activeMode === 'classify'">
+      <ClassifyFamilies @back="activeMode = null" />
+    </template>
+
+    <!-- ===== CONSTRUYE UN ÁTOMO ===== -->
+    <template v-else-if="activeMode === 'build-atom'">
+      <BuildAtom @back="activeMode = null" />
+    </template>
+
+    <!-- ===== CONFIGURACIÓN ELECTRÓNICA ===== -->
+    <template v-else-if="activeMode === 'electron-config'">
+      <ElectronConfig @back="activeMode = null" />
     </template>
   </div>
 </template>

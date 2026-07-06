@@ -48,6 +48,7 @@ function closeNav() {
           </button>
           <div class="flex items-center gap-0.5 border-l border-slate-200 dark:border-slate-700 ml-1 pl-2" role="tablist" :aria-label="$t('common.languageSelect')">
             <button @click="setLocale('es')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-mint-500', currentLocale === 'es' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']" role="tab" :aria-selected="currentLocale === 'es'" aria-label="Español">ES</button>
+            <button @click="setLocale('ca')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-mint-500', currentLocale === 'ca' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']" role="tab" :aria-selected="currentLocale === 'ca'" aria-label="Valencià">CA</button>
             <button @click="setLocale('en')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-mint-500', currentLocale === 'en' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']" role="tab" :aria-selected="currentLocale === 'en'" aria-label="English">EN</button>
           </div>
           <!-- Mobile hamburger -->
