@@ -32,12 +32,13 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,json}'],
+        cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
             urlPattern: /^https?.*/,
-            handler: 'CacheFirst',
+            handler: 'NetworkFirst',
             options: {
-              cacheName: 'quimica-visual-cache',
+              cacheName: 'quimica-visual-v3',
               expiration: { maxEntries: 200, maxAgeSeconds: 30 * 24 * 60 * 60 }
             }
           }
