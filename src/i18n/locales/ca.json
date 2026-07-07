@@ -29,7 +29,8 @@
     "level": "Nivell",
     "xpToNext": "XP per al següent nivell",
     "elements": "elements",
-    "elementsCount": "118 elements"
+    "elementsCount": "118 elements",
+    "explored": "explorats"
   },
   "table": {
     "legend": "Llegenda",
@@ -121,6 +122,9 @@
     "group": "Grup",
     "period": "Període",
     "block": "Bloc",
+    "periods": "Períodes",
+    "groups": "Grups",
+    "blocks": "Blocs",
     "state": "Estat",
     "family": "Família",
     "electronConfiguration": "Configuració electrònica",

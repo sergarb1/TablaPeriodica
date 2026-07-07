@@ -205,7 +205,7 @@ function submitSort() {
   } else {
     addIncorrect()
     streak.value = 0
-    sortMessage.value = '✗ ' + t('learn.incorrect') + '. Ordre correcte: ' + sorted.map(e => e.symbol).join(' → ')
+    sortMessage.value = '✗ ' + t('learn.incorrect') + '. Orden correcto: ' + sorted.map(e => e.symbol).join(' → ')
   }
 }
 
@@ -655,6 +655,20 @@ watch(activeMode, () => {
 
 function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.nameEn }
 
+const titleKey: Record<string, string> = {
+  quiz: 'games.guessElement',
+  memory: 'games.memory',
+  speed: 'games.speedQuiz',
+  completa: 'games.completeTable',
+  classify: 'games.families',
+  'build-atom': 'games.buildAtom',
+  'electron-config': 'games.electronBuilder',
+}
+
+function titleFor(g: { id: string; title: string }): string {
+  return t(titleKey[g.id]) || g.title
+}
+
 function cleanupCompleta() {
   if (completaTimer) { clearInterval(completaTimer); completaTimer = null }
 }
@@ -672,7 +686,7 @@ function cleanupCompleta() {
         <button v-for="(g, i) in gamesList" :key="g.id" v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="100 + i * 80" @click="activeMode = g.id" class="group relative overflow-hidden p-6 rounded-2xl text-left text-white transition-all hover:shadow-xl hover:scale-[1.03] active:scale-[0.97] bg-gradient-to-br" :class="g.gradient">
           <div class="relative z-10">
             <div class="text-4xl mb-3">{{ g.icon }}</div>
-            <h2 class="text-lg font-bold mb-1">{{ g.id === 'quiz' ? t('games.guessElement') : g.id === 'speed' ? (t('games.speedQuiz') || g.title) : g.title }}</h2>
+            <h2 class="text-lg font-bold mb-1">{{ titleFor(g) }}</h2>
             <p class="text-xs text-white/80">{{ typeof g.desc === 'function' ? g.desc() : g.desc }}</p>
           </div>
           <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />

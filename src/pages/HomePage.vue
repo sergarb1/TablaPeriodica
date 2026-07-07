@@ -54,7 +54,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
           <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-500/10 flex items-center justify-center mb-2">
             <svg class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
           </div>
-          <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white mb-0.5">{{ t('app.explore') }}</h2>
+          <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-0.5">{{ t('app.explore') }}</h2>
           <p class="text-[0.65rem] sm:text-xs text-slate-500 dark:text-slate-400">{{ t('home.exploreDesc') }}</p>
           <span class="inline-block mt-1.5 text-[0.55rem] font-medium text-blue-500 bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 rounded-full">{{ t('home.elementsCount') }}</span>
         </div>
@@ -65,7 +65,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
           <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-mint-500/10 flex items-center justify-center mb-2">
             <svg class="w-4 h-4 sm:w-5 sm:h-5 text-mint-600 dark:text-mint-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
           </div>
-          <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white mb-0.5">{{ t('app.learn') }}</h2>
+          <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-0.5">{{ t('app.learn') }}</h2>
           <p class="text-[0.65rem] sm:text-xs text-slate-500 dark:text-slate-400">{{ t('home.learnDesc') }}</p>
           <span class="inline-block mt-1.5 text-[0.55rem] font-medium text-mint-600 bg-mint-100 dark:bg-mint-900/40 px-2 py-0.5 rounded-full">{{ t('common.details') || 'Guía + Flashcards' }}</span>
         </div>
@@ -76,7 +76,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
           <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-2">
             <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
-          <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white mb-0.5">{{ t('app.play') }}</h2>
+          <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-0.5">{{ t('app.play') }}</h2>
           <p class="text-[0.65rem] sm:text-xs text-slate-500 dark:text-slate-400">{{ t('home.playDesc') }}</p>
           <span class="inline-block mt-1.5 text-[0.55rem] font-medium text-amber-600 bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 rounded-full">7 {{ t('home.elements') }}</span>
         </div>
@@ -113,7 +113,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
           </div>
           <div>
             <span class="text-[0.5rem] text-slate-400">{{ t('home.dailyElement') }}</span>
-            <p class="text-xs font-semibold text-slate-900 dark:text-white">{{ dailyName }}</p>
+            <p class="text-xs font-bold text-slate-900 dark:text-white">{{ dailyName }}</p>
           </div>
         </div>
       </div>
@@ -121,7 +121,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
 
     <!-- Studied counter -->
     <div v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="500" class="text-center">
-      <p class="text-[0.65rem] text-slate-400">{{ studiedCount }}/118 {{ t('home.elements') }} {{ t('home.explored') || 'explorados' }}</p>
+      <p class="text-[0.65rem] text-slate-400">{{ studiedCount }}/118 {{ t('home.elements') }} {{ t('home.explored') }}</p>
     </div>
   </div>
 </template>
