@@ -60,10 +60,14 @@ function closeNav() {
             <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
           </button>
-          <div class="flex items-center gap-0.5 border-l border-slate-200 dark:border-slate-700 ml-1 pl-2" role="tablist" :aria-label="$t('common.languageSelect')">
-            <button @click="setLocale('es')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-mint-500', currentLocale === 'es' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']" role="tab" :aria-selected="currentLocale === 'es'" aria-label="Español">ES</button>
-            <button @click="setLocale('ca')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-mint-500', currentLocale === 'ca' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']" role="tab" :aria-selected="currentLocale === 'ca'" aria-label="Valencià">CA</button>
-            <button @click="setLocale('en')" :class="['px-2.5 py-1.5 text-xs rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-mint-500', currentLocale === 'en' ? 'bg-mint-500 text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200']" role="tab" :aria-selected="currentLocale === 'en'" aria-label="English">EN</button>
+          <div class="border-l border-slate-200 dark:border-slate-700 ml-1 pl-2">
+            <select :value="currentLocale" @change="setLocale(($event.target as HTMLSelectElement).value)"
+              class="appearance-none bg-transparent text-xs font-medium text-slate-500 dark:text-slate-400 py-1.5 px-1.5 pr-5 rounded-lg cursor-pointer hover:text-slate-700 dark:hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-mint-500 transition-colors"
+              :aria-label="$t('common.languageSelect')">
+              <option value="es" :selected="currentLocale === 'es'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">🇪🇸 ES</option>
+              <option value="ca" :selected="currentLocale === 'ca'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">🏴󠁥󠁳󠁴󠁿 CA</option>
+              <option value="en" :selected="currentLocale === 'en'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">🇬🇧 EN</option>
+            </select>
           </div>
           <!-- Mobile hamburger -->
           <button @click="isNavOpen = !isNavOpen" class="sm:hidden min-w-[44px] min-h-[44px] p-2.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-1 focus-visible:outline-2 focus-visible:outline-mint-500" :aria-label="$t(isNavOpen ? 'common.close' : 'common.menu')" :aria-expanded="isNavOpen">
