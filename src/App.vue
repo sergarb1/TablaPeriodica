@@ -62,7 +62,7 @@ function closeNav() {
           </button>
           <div class="border-l border-slate-200 dark:border-slate-700 ml-1 pl-2">
             <select :value="currentLocale" @change="setLocale(($event.target as HTMLSelectElement).value)"
-              class="appearance-none bg-transparent text-xs font-medium text-slate-500 dark:text-slate-400 py-1.5 px-1.5 pr-5 rounded-lg cursor-pointer hover:text-slate-700 dark:hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-mint-500 transition-colors"
+              class="appearance-none bg-mint-100 dark:bg-mint-900 text-xs font-semibold text-mint-800 dark:text-mint-200 py-1.5 px-2.5 pr-6 rounded-full cursor-pointer hover:bg-mint-200 dark:hover:bg-mint-800 focus-visible:outline-2 focus-visible:outline-mint-500 transition-colors"
               :aria-label="$t('common.languageSelect')">
               <option value="es" :selected="currentLocale === 'es'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">ES</option>
               <option value="ca" :selected="currentLocale === 'ca'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">CA</option>
