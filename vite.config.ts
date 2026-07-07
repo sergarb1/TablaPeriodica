@@ -11,7 +11,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['logo.png', 'logoCuadrado.png', 'favicon.svg', 'icons/*.svg'],
+      includeAssets: ['logo.png', 'logoCuadrado.png', 'favicon.ico', 'favicon.svg', 'favicon-96x96.png', 'icons/*.svg'],
       manifest: {
         name: 'Aprende la tabla periódica',
         short_name: 'Tabla Periódica',
