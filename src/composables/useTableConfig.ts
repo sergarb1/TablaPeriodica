@@ -13,20 +13,24 @@ export interface TableConfig {
   hoverInfo: boolean
 }
 
-const defaults: TableConfig = {
-  tileSize: 'normal',
-  labelMode: 'symbol',
-  colorTheme: 'filled',
-  fblockPosition: 'bottom',
-  animations: true,
-  showAtomicNumber: true,
-  hoverInfo: true,
+function getDefaults(): TableConfig {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
+  return {
+    tileSize: isMobile ? 'compact' : 'normal',
+    labelMode: 'symbol',
+    colorTheme: 'filled',
+    fblockPosition: 'bottom',
+    animations: true,
+    showAtomicNumber: true,
+    hoverInfo: true,
+  }
 }
 
+const defaults = getDefaults()
 const config = useLocalStorage<TableConfig>('quimica-table-config', defaults)
 
-// Set compact for first-time mobile visitors
-if (!localStorage.getItem('quimica-table-config') && typeof window !== 'undefined' && window.innerWidth < 640) {
+// Override to compact on mobile even for returning visitors (viewport-based)
+if (typeof window !== 'undefined' && window.innerWidth < 640) {
   config.value.tileSize = 'compact'
 }
 
