@@ -48,6 +48,8 @@ const mockElement = {
   usesEn: 'Fuel, lubricants, carbon fibers',
   risksEs: 'El hollín y el polvo de carbón pueden ser cancerígenos.',
   risksEn: 'Soot and coal dust can be carcinogenic.',
+  electronAffinity: null,
+  imageUrl: null,
 }
 
 function mountTile(props = {}) {
