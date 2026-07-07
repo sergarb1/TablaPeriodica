@@ -56,13 +56,13 @@ function closeNav() {
         </nav>
 
         <div class="flex items-center gap-1 shrink-0">
-          <button @click="toggle" class="min-w-[44px] min-h-[44px] p-2.5 rounded-full bg-mint-100 dark:bg-mint-900 text-mint-600 dark:text-mint-300 hover:bg-mint-200 dark:hover:bg-mint-800 transition-colors focus-visible:outline-2 focus-visible:outline-mint-500" :title="isDark ? 'Light mode' : 'Dark mode'" :aria-label="isDark ? $t('common.light') : $t('common.dark')">
+          <button @click="toggle" class="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-lg bg-mint-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-mint-200 dark:hover:bg-slate-700 transition-colors focus-visible:outline-2 focus-visible:outline-mint-500" :title="isDark ? 'Light mode' : 'Dark mode'" :aria-label="isDark ? $t('common.light') : $t('common.dark')">
             <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
           </button>
           <div class="border-l border-slate-200 dark:border-slate-700 ml-1 pl-2">
             <select :value="currentLocale" @change="setLocale(($event.target as HTMLSelectElement).value)"
-              class="appearance-none bg-mint-100 dark:bg-mint-900 text-xs font-semibold text-mint-800 dark:text-mint-200 py-1.5 px-2.5 pr-6 rounded-full cursor-pointer hover:bg-mint-200 dark:hover:bg-mint-800 focus-visible:outline-2 focus-visible:outline-mint-500 transition-colors"
+              class="appearance-none bg-mint-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 py-2 px-3 text-center min-w-[4rem] rounded-lg cursor-pointer hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 transition-colors"
               :aria-label="$t('common.languageSelect')">
               <option value="es" :selected="currentLocale === 'es'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">ES</option>
               <option value="ca" :selected="currentLocale === 'ca'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">CA</option>
