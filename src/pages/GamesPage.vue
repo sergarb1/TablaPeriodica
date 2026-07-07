@@ -55,7 +55,7 @@ const sgOptions = ref<string[]>([])
 const sgCorrect = ref('')
 
 const gamesList = [
-  { id: 'quiz' as const, icon: '🤔', title: 'Adivina el elemento', desc: '10 preguntas con pistas y XP por racha', gradient: 'from-amber-500 to-orange-500', color: 'amber' },
+  { id: 'quiz' as const, icon: '🤔', title: 'Adivina el elemento', desc: '25 preguntas con pistas y XP por racha', gradient: 'from-amber-500 to-orange-500', color: 'amber' },
   { id: 'memory' as const, icon: '🧠', title: 'Memoria', desc: 'Empareja símbolo ↔ nombre · 8 elementos', gradient: 'from-purple-500 to-violet-500', color: 'purple' },
   { id: 'speed' as const, icon: '⚡', title: 'Contrarreloj', desc: '60 segundos · responde lo más rápido posible', gradient: 'from-red-500 to-rose-500', color: 'red' },
   { id: 'completa' as const, icon: '🧩', title: 'Completa la tabla', desc: 'Arrastra cada elemento a su posición', gradient: 'from-blue-500 to-cyan-500', color: 'blue' },
@@ -372,7 +372,7 @@ function submitFillBlank() {
 }
 
 function nextQuestion() {
-  if (totalQuestions.value >= 10) { gameOver.value = true; addGamePlayed(); return }
+  if (totalQuestions.value >= 25) { gameOver.value = true; addGamePlayed(); return }
   // Reset sort state for next question
   sortMessage.value = ''
   pickQuestion()
@@ -691,7 +691,7 @@ function cleanupCompleta() {
           <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.guessElement') }}</h2>
-        <p class="text-sm text-slate-400 mb-6">10 preguntas · XP por racha</p>
+        <p class="text-sm text-slate-400 mb-6">25 preguntas · XP por racha</p>
         <button @click="startGame" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">Comenzar</button>
       </div>
 
@@ -701,7 +701,7 @@ function cleanupCompleta() {
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">{{ t('learn.seeResult') }}</h2>
         <div class="flex justify-center gap-6 mb-6">
-          <div><p class="text-2xl font-bold text-mint-500">{{ correctCount }}/10</p><p class="text-xs text-slate-500">{{ t('learn.correct') }}</p></div>
+          <div><p class="text-2xl font-bold text-mint-500">{{ correctCount }}/25</p><p class="text-xs text-slate-500">{{ t('learn.correct') }}</p></div>
           <div><p class="text-2xl font-bold text-amber-500">{{ score }} XP</p><p class="text-xs text-slate-500">{{ t('games.score') }}</p></div>
           <div><p class="text-2xl font-bold text-purple-500">{{ bestStreak }}</p><p class="text-xs text-slate-500">{{ t('games.streak') }}</p></div>
         </div>
@@ -711,9 +711,9 @@ function cleanupCompleta() {
       <div v-else v-motion :initial="{ opacity: 0 }" :visible="{ opacity: 1 }" :duration="300">
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-3">
-            <span class="text-sm font-medium text-slate-500">{{ totalQuestions }}/10</span>
+            <span class="text-sm font-medium text-slate-500">{{ totalQuestions }}/25</span>
             <div class="w-32 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-              <div class="h-full bg-mint-500 rounded-full transition-all" :style="{ width: (totalQuestions / 10 * 100) + '%' }" />
+              <div class="h-full bg-mint-500 rounded-full transition-all" :style="{ width: (totalQuestions / 25 * 100) + '%' }" />
             </div>
           </div>
           <div class="flex items-center gap-4 text-sm">
@@ -904,7 +904,7 @@ function cleanupCompleta() {
         </template>
 
         <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all" aria-live="polite" role="alert">
-          {{ totalQuestions >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}
+          {{ totalQuestions >= 25 ? t('learn.seeResult') : t('learn.nextQuestion') }}
         </button>
         <!-- Accessibility: announce new question type -->
         <div aria-live="polite" class="sr-only">

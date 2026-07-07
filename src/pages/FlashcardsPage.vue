@@ -9,6 +9,16 @@ const elements = elementsData as ElementData[]
 
 const families = [...new Set(elements.map(e => e.family).filter(Boolean))] as string[]
 const selectedFamily = ref<string>('')
+const studyMode = ref<'symbol-name' | 'name-symbol' | 'config-element'>(
+  (localStorage.getItem('flashcards_mode') as 'symbol-name' | 'name-symbol' | 'config-element') || 'symbol-name'
+)
+
+function setMode(m: 'symbol-name' | 'name-symbol' | 'config-element') {
+  studyMode.value = m
+  localStorage.setItem('flashcards_mode', m)
+  currentIndex.value = 0
+  flipped.value = false
+}
 
 interface SM2Card {
   n: number
@@ -171,6 +181,13 @@ const nextReviewLabel = computed(() => {
     </div>
 
     <template v-else>
+      <div class="flex justify-center gap-1 mb-2">
+        <button v-for="m in ([{k:'symbol-name',l:'Símbolo'},{k:'name-symbol',l:'Nombre'},{k:'config-element',l:'Config'}] as const)" :key="m.k" @click="setMode(m.k)"
+          :class="['px-3 py-1.5 rounded-lg text-[0.6rem] font-semibold transition-all border',
+            studyMode === m.k ? 'bg-mint-500 text-white border-mint-500' : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-mint-300']">
+          {{ m.l }}
+        </button>
+      </div>
       <div class="flex items-center gap-1.5 mb-3">
         <select v-model="selectedFamily" class="flex-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 px-2 py-2">
           <option value="">{{ t('learn.allFamilies') || 'All families' }}</option>
@@ -189,25 +206,47 @@ const nextReviewLabel = computed(() => {
       <div class="aspect-[3/4] max-h-[280px] cursor-pointer perspective-1000 mb-3" @click="flip">
         <div class="relative w-full h-full transition-transform duration-[600ms] preserve-3d" :class="{ 'rotate-y-180': flipped }">
           <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center backface-hidden p-3">
-            <div class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow flex items-center justify-center mb-2">
-              <span class="text-xl font-bold font-mono text-slate-800 dark:text-slate-200">{{ currentCard.symbol }}</span>
-            </div>
-            <p class="text-[0.6rem] text-slate-500 dark:text-slate-400 mb-0.5">{{ currentCard.atomicNumber }}</p>
-            <h2 class="text-sm font-bold text-slate-900 dark:text-white">{{ name(currentCard) }}</h2>
-            <p class="text-[0.5rem] text-slate-400 mt-1.5">{{ t('learn.tapToFlip') || 'Tap to reveal' }}</p>
+            <template v-if="studyMode === 'symbol-name'">
+              <div class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow flex items-center justify-center mb-2">
+                <span class="text-xl font-bold font-mono text-slate-800 dark:text-slate-200">{{ currentCard.symbol }}</span>
+              </div>
+              <p class="text-[0.6rem] text-slate-500 dark:text-slate-400 mb-0.5">{{ currentCard.atomicNumber }}</p>
+              <p class="text-sm text-slate-400 mb-1">???</p>
+            </template>
+            <template v-else-if="studyMode === 'name-symbol'">
+              <p class="text-[0.6rem] text-slate-500 dark:text-slate-400 mb-1">Z = {{ currentCard.atomicNumber }}</p>
+              <h2 class="text-lg font-bold text-slate-900 dark:text-white">{{ name(currentCard) }}</h2>
+              <p class="text-sm font-mono text-slate-400 mt-1">?</p>
+            </template>
+            <template v-else-if="studyMode === 'config-element'">
+              <p class="text-[0.6rem] text-slate-500 dark:text-slate-400 mb-1">{{ currentCard.atomicNumber }} e⁻</p>
+              <p class="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 px-2 leading-tight">{{ currentCard.electronConfiguration }}</p>
+              <p class="text-sm font-mono text-slate-400 mt-1.5">?</p>
+            </template>
+            <p class="text-[0.5rem] text-slate-400 mt-auto">{{ t('learn.tapToFlip') || 'Tap to reveal' }}</p>
           </div>
 
-          <div class="absolute inset-0 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center backface-hidden rotate-y-180 p-3">
-            <div class="text-center space-y-1">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-1" :style="{ backgroundColor: currentCard.color + '30' }">
+          <div class="absolute inset-0 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center backface-hidden rotate-y-180 p-3 overflow-y-auto">
+            <div class="text-center space-y-0.5 w-full max-w-[180px]">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-0.5" :style="{ backgroundColor: currentCard.color + '30' }">
                 <span class="text-sm font-bold font-mono" :style="{ color: currentCard.color }">{{ currentCard.symbol }}</span>
               </div>
-              <p class="text-[0.6rem] text-slate-500">{{ currentCard.atomicMass }} u</p>
-              <p v-if="currentCard.electronegativity" class="text-[0.55rem] text-slate-400">{{ t('element.electronegativity') }}: {{ currentCard.electronegativity }}</p>
-              <p v-if="currentCard.atomicRadius" class="text-[0.55rem] text-slate-400">{{ t('element.atomicRadius') }}: {{ currentCard.atomicRadius }} pm</p>
+              <p class="text-xs font-bold text-slate-900 dark:text-white">{{ name(currentCard) }}</p>
+              <p class="text-[0.5rem] text-slate-500">{{ currentCard.atomicMass }} u · Z={{ currentCard.atomicNumber }}</p>
+              <div class="grid grid-cols-2 gap-x-1 text-[0.5rem] text-slate-400 mt-0.5">
+                <span v-if="currentCard.electronegativity">{{ t('element.electronegativity') }}: {{ currentCard.electronegativity }}</span>
+                <span v-if="currentCard.atomicRadius">{{ t('element.atomicRadius') }}: {{ currentCard.atomicRadius }} pm</span>
+                <span v-if="currentCard.density">Densidad: {{ currentCard.density }} g/cm³</span>
+                <span v-if="currentCard.meltingPoint">P.fusión: {{ currentCard.meltingPoint }} K</span>
+                <span v-if="currentCard.boilingPoint">P.ebull.: {{ currentCard.boilingPoint }} K</span>
+                <span>Valencia: {{ currentCard.valence?.join(', ') || '-' }}</span>
+              </div>
               <p class="text-[0.5rem] text-slate-500 italic">{{ currentCard.familyEs }} / {{ currentCard.familyEn }}</p>
               <p class="text-[0.5rem] text-slate-400">{{ currentCard.group ? `G. ${currentCard.group}` : '' }} · P. {{ currentCard.period }} · {{ currentCard.block }}-block</p>
-              <p class="text-[0.45rem] text-slate-400 mt-1 border-t border-slate-200 dark:border-slate-700 pt-1">{{ t('flashcards.nextReview') || 'Pròxima revisió' }}: {{ nextReviewLabel }}</p>
+              <p class="text-[0.45rem] text-slate-500 font-mono">{{ currentCard.electronConfiguration }}</p>
+              <p class="text-[0.45rem] text-slate-400">{{ currentCard.yearDiscovered }} · {{ locale === 'es' ? currentCard.discovererEs : currentCard.discovererEn }}</p>
+              <p v-if="currentCard.usesEs" class="text-[0.4rem] text-slate-400 mt-0.5 line-clamp-2">{{ locale === 'es' ? currentCard.usesEs : currentCard.usesEn }}</p>
+              <p class="text-[0.4rem] text-slate-400 mt-0.5 border-t border-slate-200 dark:border-slate-700 pt-0.5">{{ t('flashcards.nextReview') || 'Pròxima revisió' }}: {{ nextReviewLabel }}</p>
             </div>
           </div>
         </div>
