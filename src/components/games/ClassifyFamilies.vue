@@ -32,7 +32,7 @@ const familyLabel = (f: string) => {
 }
 
 function pick() {
-  const pool = allElements.filter(e => e.family && e.family !== 'unknown' && e.atomicNumber <= 86)
+  const pool = allElements.filter(e => e.family && e.family !== 'unknown' && e.atomicNumber <= 118)
   const el = pool[Math.floor(Math.random() * pool.length)]
   current.value = el
   correctFamily.value = el.family
@@ -66,7 +66,7 @@ function selectFamily(f: string) {
 }
 
 function next() {
-  if (total.value >= 10) { done.value = true; return }
+  if (total.value >= 12) { done.value = true; return }
   pick()
 }
 
@@ -90,7 +90,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
         <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       </div>
       <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.families') }}</h2>
-      <p class="text-sm text-slate-400 mb-6">Classifica 10 elements en la seua família correcta</p>
+      <p class="text-sm text-slate-400 mb-6">Classifica 12 elements en la seua família correcta</p>
       <button @click="start" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
     </div>
 
@@ -100,7 +100,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
       </div>
       <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">¡Completado!</h2>
       <div class="flex justify-center gap-6 mb-6">
-        <div><p class="text-2xl font-bold text-mint-500">{{ correctCount }}/10</p><p class="text-xs text-slate-500">{{ t('learn.correct') }}</p></div>
+        <div><p class="text-2xl font-bold text-mint-500">{{ correctCount }}/12</p><p class="text-xs text-slate-500">{{ t('learn.correct') }}</p></div>
         <div><p class="text-2xl font-bold text-amber-500">{{ score }} XP</p><p class="text-xs text-slate-500">{{ t('games.score') }}</p></div>
       </div>
       <button @click="start" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
@@ -108,7 +108,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
 
     <div v-else>
       <div class="flex items-center justify-between mb-4">
-        <span class="text-sm font-medium text-slate-500">{{ total }}/10</span>
+        <span class="text-sm font-medium text-slate-500">{{ total }}/12</span>
         <span class="text-amber-500 font-medium">{{ score }} XP</span>
       </div>
 
@@ -136,7 +136,7 @@ function name(el: ElementData) { return locale.value === 'es' ? el.nameEs : el.n
       </div>
 
       <button v-if="answered" @click="next" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all">
-        {{ total >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}
+        {{ total >= 12 ? t('learn.seeResult') : t('learn.nextQuestion') }}
       </button>
     </div>
   </div>

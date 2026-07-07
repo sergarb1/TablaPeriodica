@@ -17,7 +17,7 @@ type GameMode = 'quiz' | 'memory' | 'speed' | 'completa' | 'classify' | 'build-a
 const activeMode = ref<GameMode>(null)
 
 // Question types for quiz variety
-const questionTypes = ['hints', 'symbol-to-name', 'name-to-symbol', 'true-false', 'fill-blank', 'group-guess', 'sort-elements'] as const
+const questionTypes = ['hints', 'symbol-to-name', 'name-to-symbol', 'true-false', 'fill-blank', 'group-guess', 'sort-elements', 'block-guess', 'state-guess'] as const
 type QuestionType = typeof questionTypes[number]
 const currentQType = ref<QuestionType>('hints')
 
@@ -43,6 +43,16 @@ const sortOrder = ref<'asc' | 'desc'>('asc')
 const sortAnswered = ref(false)
 const sortSelected = ref<number[]>([])
 const sortMessage = ref('')
+
+// Block-guess state
+const bgElement = ref<ElementData | null>(null)
+const bgOptions = ref<string[]>([])
+const bgCorrect = ref('')
+
+// State-guess state
+const sgElement = ref<ElementData | null>(null)
+const sgOptions = ref<string[]>([])
+const sgCorrect = ref('')
 
 const gamesList = [
   { id: 'quiz' as const, icon: '🤔', title: 'Adivina el elemento', desc: '10 preguntas con pistas y XP por racha', gradient: 'from-amber-500 to-orange-500', color: 'amber' },
@@ -148,6 +158,22 @@ function generateSortElements() {
   sortMessage.value = ''
 }
 
+function generateBlockGuess(correct: ElementData) {
+  bgElement.value = correct
+  bgCorrect.value = correct.block.toUpperCase()
+  bgOptions.value = ['S', 'P', 'D', 'F'].sort(() => Math.random() - 0.5)
+}
+
+function generateStateGuess(correct: ElementData) {
+  sgElement.value = correct
+  const stateKey = (locale.value === 'es' ? 'stateEs' : 'stateEn') as 'stateEs' | 'stateEn'
+  sgCorrect.value = correct[stateKey]
+  const allStates = locale.value === 'es'
+    ? ['Sólido', 'Líquido', 'Gas', 'Desconocido']
+    : ['Solid', 'Liquid', 'Gas', 'Unknown']
+  sgOptions.value = [...allStates].sort(() => Math.random() - 0.5)
+}
+
 function selectSortElement(idx: number) {
   if (sortAnswered.value) return
   if (sortSelected.value.includes(idx)) {
@@ -204,6 +230,10 @@ function pickQuestion() {
     generateGroupGuess(correct)
   } else if (currentQType.value === 'sort-elements') {
     generateSortElements()
+  } else if (currentQType.value === 'block-guess') {
+    generateBlockGuess(correct)
+  } else if (currentQType.value === 'state-guess') {
+    generateStateGuess(correct)
   } else {
     const others = pool.filter(e => e.atomicNumber !== correct.atomicNumber)
     const shuffled = [correct]
@@ -284,6 +314,44 @@ function selectGroupGuess(val: number) {
   }
 }
 
+function selectBlockGuess(val: string) {
+  if (answered.value) return
+  answered.value = true
+  selectedAnswer.value = bgElement.value!.atomicNumber
+  const correct = val === bgCorrect.value
+  if (correct) {
+    addCorrect()
+    streak.value++
+    if (streak.value > bestStreak.value) bestStreak.value = streak.value
+    correctCount.value++
+    const xpGain = 10 + streak.value * 2
+    addXp(xpGain)
+    score.value += xpGain
+  } else {
+    addIncorrect()
+    streak.value = 0
+  }
+}
+
+function selectStateGuess(val: string) {
+  if (answered.value) return
+  answered.value = true
+  selectedAnswer.value = sgElement.value!.atomicNumber
+  const correct = val === sgCorrect.value
+  if (correct) {
+    addCorrect()
+    streak.value++
+    if (streak.value > bestStreak.value) bestStreak.value = streak.value
+    correctCount.value++
+    const xpGain = 10 + streak.value * 2
+    addXp(xpGain)
+    score.value += xpGain
+  } else {
+    addIncorrect()
+    streak.value = 0
+  }
+}
+
 function submitFillBlank() {
   if (answered.value) return
   answered.value = true
@@ -330,6 +398,7 @@ const clue = computed(() => {
 })
 
 // ----- MEMORY GAME -----
+const memoryDifficulty = ref<'easy' | 'medium' | 'hard'>('easy')
 const memoryCards = ref<{ id: number; symbol: string; atomicNumber: number; flipped: boolean; matched: boolean }[]>([])
 const memoryFlipped = ref<number[]>([])
 const memoryMatched = ref(0)
@@ -337,14 +406,21 @@ const memoryMoves = ref(0)
 const memoryStarted = ref(false)
 const memoryWon = ref(false)
 
+const memoryConfig = computed(() => ({
+  easy: { maxZ: 20, pairs: 8 },
+  medium: { maxZ: 60, pairs: 10 },
+  hard: { maxZ: 118, pairs: 12 },
+}[memoryDifficulty.value]))
+
 function startMemory() {
-  const pool = allElements.filter(e => e.atomicNumber <= 20).slice(0, 8)
-  const pairs = pool.flatMap(e => [
+  const { maxZ, pairs } = memoryConfig.value
+  const pool = allElements.filter(e => e.atomicNumber <= maxZ).sort(() => Math.random() - 0.5).slice(0, pairs)
+  const cards = pool.flatMap(e => [
     { id: e.atomicNumber * 2, symbol: e.symbol, atomicNumber: e.atomicNumber, flipped: false, matched: false },
     { id: e.atomicNumber * 2 + 1, symbol: getDisplay(e), atomicNumber: e.atomicNumber, flipped: false, matched: false },
   ])
-  for (let i = pairs.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pairs[i], pairs[j]] = [pairs[j], pairs[i]] }
-  memoryCards.value = pairs
+  for (let i = cards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [cards[i], cards[j]] = [cards[j], cards[i]] }
+  memoryCards.value = cards
   memoryFlipped.value = []
   memoryMatched.value = 0
   memoryMoves.value = 0
@@ -366,7 +442,7 @@ function flipCard(idx: number) {
       memoryMatched.value++
       memoryFlipped.value = []
       addXp(5)
-      if (memoryMatched.value === 8) { memoryWon.value = true; addGamePlayed() }
+      if (memoryMatched.value === memoryConfig.value.pairs) { memoryWon.value = true; addGamePlayed() }
     } else {
       setTimeout(() => {
         memoryCards.value[a].flipped = false
@@ -378,6 +454,8 @@ function flipCard(idx: number) {
 }
 
 // ----- SPEED QUIZ -----
+const speedTypes = ['hints', 'symbol-to-name', 'name-to-symbol'] as const
+type SpeedType = typeof speedTypes[number]
 const speedTime = ref(60)
 const speedRunning = ref(false)
 const speedScore = ref(0)
@@ -387,6 +465,11 @@ const speedCurrent = ref<ElementData | null>(null)
 const speedOptions = ref<ElementData[]>([])
 const speedAns = ref<number | null>(null)
 const speedDone = ref(false)
+const speedQType = ref<SpeedType>('hints')
+const speedBgOpts = ref<string[]>([])
+const speedBgCorrect = ref('')
+const speedSgOpts = ref<string[]>([])
+const speedSgCorrect = ref('')
 let speedTimer: ReturnType<typeof setInterval> | null = null
 
 function startSpeed() {
@@ -405,6 +488,11 @@ function startSpeed() {
 }
 
 function nextSpeedQuestion() {
+  const roll = Math.random()
+  if (roll < 0.5) speedQType.value = 'hints'
+  else if (roll < 0.75) speedQType.value = 'symbol-to-name'
+  else speedQType.value = 'name-to-symbol'
+
   const pool = allElements.filter(e => e.atomicNumber <= 86)
   const idx = Math.floor(Math.random() * pool.length)
   const correct = pool[idx]
@@ -440,8 +528,8 @@ function endSpeed() {
 }
 
 // ----- COMPLETA LA TABLA GAME -----
-const completaTargetZ = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-const completaTarget = computed(() => allElements.filter(e => completaTargetZ.includes(e.atomicNumber)))
+const completaDifficulty = ref<'easy' | 'medium' | 'hard'>('easy')
+const completaTargets = ref<ElementData[]>([])
 const completaGrid = ref<(ElementData | null)[][]>([])
 const completaPool = ref<ElementData[]>([])
 const completaPlaced = ref<number[]>([])
@@ -453,8 +541,19 @@ const completaTime = ref(0)
 let completaTimer: ReturnType<typeof setInterval> | null = null
 const completaDragEl = ref<number | null>(null)
 
+function generateCompletaTargets(): ElementData[] {
+  if (completaDifficulty.value === 'easy') {
+    return allElements.filter(e => e.atomicNumber <= 20)
+  }
+  const maxZ = completaDifficulty.value === 'medium' ? 86 : 118
+  const pool = allElements.filter(e => e.y <= 7 && e.atomicNumber <= maxZ)
+  const count = completaDifficulty.value === 'medium' ? 20 : 30
+  return [...pool].sort(() => Math.random() - 0.5).slice(0, count)
+}
+
 function startCompleta() {
-  const els = [...completaTarget.value]
+  const els = generateCompletaTargets()
+  completaTargets.value = els
   completaPlaced.value = []
   completaScore.value = 0
   completaMistakes.value = 0
@@ -494,7 +593,7 @@ function completaDrop(z: number, gridX: number, gridY: number) {
       row[gridX - 1] = el
       newGrid[gridY - 1] = row
       completaGrid.value = newGrid
-      if (completaPlaced.value.length === completaTargetZ.length) {
+      if (completaPlaced.value.length === completaTargets.value.length) {
         endCompleta()
       }
     }
@@ -763,6 +862,47 @@ function cleanupCompleta() {
           </button>
         </template>
 
+        <!-- BLOCK-GUESS question type -->
+        <template v-else-if="currentQType === 'block-guess' && bgElement">
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 mb-4 text-center">
+            <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">Bloque</p>
+            <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-2 font-bold text-xl" :style="{ backgroundColor: bgElement.color + '30', color: bgElement.color }">{{ bgElement.symbol }}</div>
+            <p class="text-lg font-bold text-slate-900 dark:text-white">{{ getDisplay(bgElement) }}</p>
+            <p class="text-xs text-slate-400 mt-1">Z = {{ bgElement.atomicNumber }}</p>
+            <p class="text-sm text-slate-500 mt-2">¿De qué bloque es?</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button v-for="val in bgOptions" :key="val" @click="selectBlockGuess(val)" :disabled="answered"
+              :class="['px-4 py-3 rounded-xl border font-bold text-sm transition-all',
+                answered && val === bgCorrect ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30 text-mint-700 dark:text-mint-300' :
+                answered && val !== bgCorrect ? 'border-red-400 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300' :
+                'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600',
+                answered ? 'cursor-default' : 'cursor-pointer hover:shadow-sm active:scale-[0.99]']">
+              {{ val }}
+            </button>
+          </div>
+        </template>
+        <!-- STATE-GUESS question type -->
+        <template v-else-if="currentQType === 'state-guess' && sgElement">
+          <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 mb-4 text-center">
+            <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">Estado</p>
+            <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-2 font-bold text-xl" :style="{ backgroundColor: sgElement.color + '30', color: sgElement.color }">{{ sgElement.symbol }}</div>
+            <p class="text-lg font-bold text-slate-900 dark:text-white">{{ getDisplay(sgElement) }}</p>
+            <p class="text-xs text-slate-400 mt-1">Z = {{ sgElement.atomicNumber }}</p>
+            <p class="text-sm text-slate-500 mt-2">¿En qué estado está a temperatura ambiente?</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button v-for="val in sgOptions" :key="val" @click="selectStateGuess(val)" :disabled="answered"
+              :class="['px-4 py-3 rounded-xl border font-medium text-sm transition-all',
+                answered && val === sgCorrect ? 'border-mint-400 bg-mint-50 dark:bg-mint-950/30 text-mint-700 dark:text-mint-300' :
+                answered && val !== sgCorrect ? 'border-red-400 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300' :
+                'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600',
+                answered ? 'cursor-default' : 'cursor-pointer hover:shadow-sm active:scale-[0.99]']">
+              {{ val }}
+            </button>
+          </div>
+        </template>
+
         <button v-if="answered" @click="nextQuestion" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all" aria-live="polite" role="alert">
           {{ totalQuestions >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}
         </button>
@@ -784,7 +924,14 @@ function cleanupCompleta() {
           <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.memoryGame') }}</h2>
-        <p class="text-sm text-slate-400 mb-6">Empareja cada símbolo con su nombre · Primeros 8 elementos</p>
+        <div class="flex justify-center gap-2 mb-4">
+          <button v-for="d in ([{k:'easy',l:'Fácil'},{k:'medium',l:'Media'},{k:'hard',l:'Difícil'}] as const)" :key="d.k" @click="memoryDifficulty = d.k"
+            :class="['px-4 py-2 rounded-lg text-xs font-semibold transition-all border',
+              memoryDifficulty === d.k ? 'bg-purple-500 text-white border-purple-500' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-purple-300']">
+            {{ d.l }}
+          </button>
+        </div>
+        <p class="text-sm text-slate-400 mb-6">Empareja símbolo ↔ nombre · {{ memoryConfig.pairs }} pares · Z ≤ {{ memoryConfig.maxZ }}</p>
         <button @click="startMemory" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold hover:shadow-lg transition-all">Comenzar</button>
       </div>
 
@@ -793,7 +940,7 @@ function cleanupCompleta() {
           <svg class="w-10 h-10 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.youWon') }}</h2>
-        <p class="text-sm text-slate-400 mb-4">{{ memoryMoves }} movimientos</p>
+        <p class="text-sm text-slate-400 mb-4">{{ memoryMoves }} movimientos · {{ memoryConfig.pairs }} pares</p>
         <button @click="startMemory" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
       </div>
 
@@ -807,7 +954,7 @@ function cleanupCompleta() {
         </div>
       </div>
       <div v-if="memoryStarted && !memoryWon" class="text-center mt-4">
-        <p class="text-xs text-slate-400">{{ memoryMoves }} movimientos · {{ memoryMatched }}/8 pares</p>
+        <p class="text-xs text-slate-400">{{ memoryMoves }} movimientos · {{ memoryMatched }}/{{ memoryConfig.pairs }} pares</p>
       </div>
     </template>
 
@@ -848,11 +995,25 @@ function cleanupCompleta() {
         </div>
 
         <div v-if="speedCurrent" class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 mb-4">
-          <p class="text-xs text-slate-400 mb-1">{{ t('games.hint') }}</p>
-          <div class="space-y-1">
-            <p class="text-sm font-mono text-slate-700 dark:text-slate-300">Z: {{ speedCurrent.atomicNumber }} · Masa: {{ speedCurrent.atomicMass }} u</p>
-            <p class="text-sm font-mono text-slate-700 dark:text-slate-300">{{ speedCurrent.electronConfiguration }}</p>
-          </div>
+          <template v-if="speedQType === 'hints'">
+            <p class="text-xs text-slate-400 mb-1">{{ t('games.hint') }}</p>
+            <div class="space-y-1">
+              <p class="text-sm font-mono text-slate-700 dark:text-slate-300">Z: {{ speedCurrent.atomicNumber }} · Masa: {{ speedCurrent.atomicMass }} u</p>
+              <p class="text-sm font-mono text-slate-700 dark:text-slate-300">{{ speedCurrent.electronConfiguration }}</p>
+            </div>
+          </template>
+          <template v-else-if="speedQType === 'symbol-to-name'">
+            <p class="text-xs text-slate-400 mb-1 uppercase tracking-wider">Símbolo → Nombre</p>
+            <div class="flex items-center justify-center gap-4">
+              <div class="w-14 h-14 rounded-xl flex items-center justify-center font-bold text-xl" :style="{ backgroundColor: speedCurrent.color + '30', color: speedCurrent.color }">{{ speedCurrent.symbol }}</div>
+              <p class="text-sm text-slate-500">¿Qué elemento es?</p>
+            </div>
+          </template>
+          <template v-else-if="speedQType === 'name-to-symbol'">
+            <p class="text-xs text-slate-400 mb-1 uppercase tracking-wider">Nombre → Símbolo</p>
+            <p class="text-lg font-bold text-slate-900 dark:text-white text-center">{{ locale === 'es' ? speedCurrent.nameEs : speedCurrent.nameEn }}</p>
+            <p class="text-xs text-slate-400 text-center">Z = {{ speedCurrent.atomicNumber }}</p>
+          </template>
         </div>
 
         <div class="grid gap-2">
@@ -879,8 +1040,19 @@ function cleanupCompleta() {
           <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         </div>
         <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t('games.completeTable') }}</h2>
+        <div class="flex justify-center gap-2 mb-4">
+          <button v-for="d in ([{k:'easy',l:'Fácil'},{k:'medium',l:'Media'},{k:'hard',l:'Difícil'}] as const)" :key="d.k" @click="completaDifficulty = d.k"
+            :class="['px-4 py-2 rounded-lg text-xs font-semibold transition-all border',
+              completaDifficulty === d.k ? 'bg-blue-500 text-white border-blue-500' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-blue-300']">
+            {{ d.l }}
+          </button>
+        </div>
         <p class="text-sm text-slate-400 mb-2">{{ t('games.completeTableDesc') }}</p>
-        <p class="text-xs text-slate-400 mb-6">{{ t('games.completeTableEasy') }}</p>
+        <p class="text-xs text-slate-400 mb-6">
+          <template v-if="completaDifficulty === 'easy'">{{ t('games.completeTableEasy') }}</template>
+          <template v-else-if="completaDifficulty === 'medium'">20 elementos aleatorios · Z ≤ 86</template>
+          <template v-else>30 elementos aleatorios · Z ≤ 118</template>
+        </p>
         <button @click="startCompleta" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
       </div>
 
@@ -901,7 +1073,7 @@ function cleanupCompleta() {
             <span class="text-sm font-bold font-mono">{{ completaTime }}s</span>
           </div>
           <div class="flex items-center gap-3 text-sm">
-            <span class="text-mint-500 font-medium">{{ completaPlaced.length }}/{{ completaTargetZ.length }}</span>
+            <span class="text-mint-500 font-medium">{{ completaPlaced.length }}/{{ completaTargets.length }}</span>
             <span v-if="completaMistakes > 0" class="text-red-400">{{ completaMistakes }} {{ t('games.mistakes') }}</span>
           </div>
         </div>

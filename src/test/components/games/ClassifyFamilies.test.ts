@@ -41,7 +41,7 @@ describe('ClassifyFamilies.vue', () => {
   it('shows game UI after starting', async () => {
     const wrapper = mountGame()
     await startGame(wrapper)
-    expect(wrapper.text()).toContain('/10')
+    expect(wrapper.text()).toContain('/12')
   })
 
   it('shows family options (4 buttons) after picking', async () => {

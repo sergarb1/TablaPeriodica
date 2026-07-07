@@ -77,14 +77,10 @@ dist/                  # Built output (gitignored, deployed by Actions)
 - **Popover clickable** — "Detalles" button removed; whole card clickable; "Click para más info" hint
 - **Square logo** — `logoCuadrado.png` added (`public/`); used as favicon, apple-touch-icon, PWA manifest icons
 
-### In Progress — Test Suite Expansion (Fase 3)
-- **New test files added:**
-  - `src/test/components/OrbitalDiagram.test.ts` — 7 tests (parsing, labels, arrows, empty boxes)
-  - `src/test/components/games/ElectronConfig.test.ts` — 7 tests (intro, start, options, disabling, back)
-  - `src/test/components/games/ClassifyFamilies.test.ts` — 7 tests (intro, start, families, disabling, back, validation)
-  - `src/test/components/games/BuildAtom.test.ts` — 8 tests (intro, start, particles, options, hint, back, neutron calc)
-- **Existing tests updated:**
-  - `i18n.test.ts` — 6 tests (CA locale parity check added)
-  - `elements.test.ts` — 17 tests (type-level electronAffinity/imageUrl checks)
-  - `ElementTile.test.ts` — 13 tests (highlighted prop test added)
+### Completed — Replayability Expansion
+- **Memoria**: pool aleatorio (Z≤20/60/118 según dificultad fácil/media/díficil), 8/10/12 pares
+- **Completa la tabla**: 3 dificultades — fácil (Z≤20), media (20 aleatorios Z≤86), difícil (30 aleatorios Z≤118)
+- **Quiz**: 2 nuevos tipos de pregunta — `block-guess` (bloque s/p/d/f) y `state-guess` (estado sólido/líquido/gas)
+- **Speed**: rotación entre hints, símbolo→nombre y nombre→símbolo (50%/25%/25%)
+- **Sub-componentes**: pools expandidos a Z≤118; ClassifyFamilies 10→12, BuildAtom 8→10, ElectronConfig 10→12 preguntas
 - **113 tests pass** (10 suites, 0 failures), build clean

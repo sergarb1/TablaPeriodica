@@ -38,7 +38,7 @@ describe('BuildAtom.vue', () => {
   it('shows game UI after starting', async () => {
     const wrapper = mountGame()
     await startGame(wrapper)
-    expect(wrapper.text()).toContain('/8')
+    expect(wrapper.text()).toContain('/10')
   })
 
   it('shows proton, neutron, electron counts', async () => {

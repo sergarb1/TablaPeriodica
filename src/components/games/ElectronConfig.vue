@@ -24,7 +24,7 @@ const started = ref(false)
 const done = ref(false)
 
 function pick() {
-  const pool = allElements.filter(e => e.atomicNumber <= 86 && e.atomicNumber > 2)
+  const pool = allElements.filter(e => e.atomicNumber <= 118 && e.atomicNumber > 2)
   const el = pool[Math.floor(Math.random() * pool.length)]
   current.value = el
 
@@ -58,7 +58,7 @@ function select(z: number) {
 }
 
 function next() {
-  if (total.value >= 10) { done.value = true; return }
+  if (total.value >= 12) { done.value = true; return }
   pick()
 }
 
@@ -97,7 +97,7 @@ const totalElectrons = computed(() => {
       </div>
       <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4">¡Completat!</h2>
       <div class="flex justify-center gap-6 mb-6">
-        <div><p class="text-2xl font-bold text-mint-500">{{ correctCount }}/10</p><p class="text-xs text-slate-500">{{ t('learn.correct') }}</p></div>
+        <div><p class="text-2xl font-bold text-mint-500">{{ correctCount }}/12</p><p class="text-xs text-slate-500">{{ t('learn.correct') }}</p></div>
         <div><p class="text-2xl font-bold text-amber-500">{{ score }} XP</p><p class="text-xs text-slate-500">{{ t('games.score') }}</p></div>
       </div>
       <button @click="start" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold hover:shadow-lg transition-all">{{ t('games.start') }}</button>
@@ -105,7 +105,7 @@ const totalElectrons = computed(() => {
 
     <div v-else>
       <div class="flex items-center justify-between mb-4">
-        <span class="text-sm font-medium text-slate-500">{{ total }}/10</span>
+        <span class="text-sm font-medium text-slate-500">{{ total }}/12</span>
         <span class="text-amber-500 font-medium">{{ score }} XP</span>
       </div>
 
@@ -131,7 +131,7 @@ const totalElectrons = computed(() => {
       </div>
 
       <button v-if="answered" @click="next" class="mt-4 w-full py-3.5 rounded-xl bg-mint-500 text-white font-semibold hover:bg-mint-600 active:scale-[0.98] transition-all">
-        {{ total >= 10 ? t('learn.seeResult') : t('learn.nextQuestion') }}
+        {{ total >= 12 ? t('learn.seeResult') : t('learn.nextQuestion') }}
       </button>
     </div>
   </div>
