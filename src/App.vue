@@ -49,7 +49,7 @@ function closeNav() {
 
         <!-- Desktop nav -->
         <nav class="hidden sm:flex items-center gap-1" aria-label="{{ $t('common.mainNav') }}">
-          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="flex items-center gap-1.5 px-2 sm:px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
+          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="flex items-center gap-1.5 px-2 sm:px-3 py-2 text-xs sm:text-sm font-bold rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
             <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path :d="iconPath(link.icon)" /></svg>
             {{ $t(link.label) }}
           </router-link>
@@ -79,7 +79,7 @@ function closeNav() {
       <transition name="slide-down">
         <div v-if="isNavOpen" class="sm:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-lg" role="navigation" :aria-label="$t('common.mainNav')">
           <div class="px-4 py-3 flex flex-col gap-1">
-            <router-link v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeNav" class="flex items-center gap-2 px-3 py-3 text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
+            <router-link v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeNav" class="flex items-center gap-2 px-3 py-3 text-sm font-bold rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
               <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path :d="iconPath(link.icon)" /></svg>
               {{ $t(link.label) }}
             </router-link>

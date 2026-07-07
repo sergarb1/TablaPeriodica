@@ -56,12 +56,12 @@ const sgCorrect = ref('')
 
 const gamesList = [
   { id: 'quiz' as const, icon: '🤔', title: 'Adivina el elemento', desc: '25 preguntas con pistas y XP por racha', gradient: 'from-amber-500 to-orange-500', color: 'amber' },
-  { id: 'memory' as const, icon: '🧠', title: 'Memoria', desc: 'Empareja símbolo ↔ nombre · 8 elementos', gradient: 'from-purple-500 to-violet-500', color: 'purple' },
+  { id: 'memory' as const, icon: '🧠', title: 'Memoria', desc: () => `Empareja símbolo ↔ nombre · ${memoryConfig.value.pairs} pares · Z ≤ ${memoryConfig.value.maxZ}`, gradient: 'from-purple-500 to-violet-500', color: 'purple' },
   { id: 'speed' as const, icon: '⚡', title: 'Contrarreloj', desc: '60 segundos · responde lo más rápido posible', gradient: 'from-red-500 to-rose-500', color: 'red' },
-  { id: 'completa' as const, icon: '🧩', title: 'Completa la tabla', desc: 'Arrastra cada elemento a su posición', gradient: 'from-blue-500 to-cyan-500', color: 'blue' },
-  { id: 'classify' as const, icon: '🏷️', title: 'Clasifica por familias', desc: 'Assigna cada element a la seua família', gradient: 'from-teal-500 to-emerald-500', color: 'teal' },
-  { id: 'build-atom' as const, icon: '⚛️', title: 'Construye un átomo', desc: 'Endevina l\'element: protons, neutrons, electrons', gradient: 'from-orange-500 to-amber-500', color: 'orange' },
-  { id: 'electron-config' as const, icon: '🔬', title: 'Configuració electrònica', desc: 'Endevina l\'element per la seua configuració', gradient: 'from-violet-500 to-purple-500', color: 'violet' },
+  { id: 'completa' as const, icon: '🧩', title: 'Completa la tabla', desc: 'Arrastra cada elemento a su posición correcta', gradient: 'from-blue-500 to-cyan-500', color: 'blue' },
+  { id: 'classify' as const, icon: '🏷️', title: 'Clasifica por familias', desc: 'Asigna cada elemento a su familia', gradient: 'from-teal-500 to-emerald-500', color: 'teal' },
+  { id: 'build-atom' as const, icon: '⚛️', title: 'Construye un átomo', desc: 'Adivina el elemento por sus partículas', gradient: 'from-orange-500 to-amber-500', color: 'orange' },
+  { id: 'electron-config' as const, icon: '🔬', title: 'Configuración electrónica', desc: 'Adivina el elemento por su configuración', gradient: 'from-violet-500 to-purple-500', color: 'violet' },
 ]
 
 // ----- GUESS THE ELEMENT (Quiz) -----
@@ -673,7 +673,7 @@ function cleanupCompleta() {
           <div class="relative z-10">
             <div class="text-4xl mb-3">{{ g.icon }}</div>
             <h2 class="text-lg font-bold mb-1">{{ g.id === 'quiz' ? t('games.guessElement') : g.id === 'speed' ? (t('games.speedQuiz') || g.title) : g.title }}</h2>
-            <p class="text-xs text-white/80">{{ g.desc }}</p>
+            <p class="text-xs text-white/80">{{ typeof g.desc === 'function' ? g.desc() : g.desc }}</p>
           </div>
           <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
         </button>

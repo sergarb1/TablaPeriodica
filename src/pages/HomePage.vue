@@ -78,7 +78,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
           </div>
           <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white mb-0.5">{{ t('app.play') }}</h2>
           <p class="text-[0.65rem] sm:text-xs text-slate-500 dark:text-slate-400">{{ t('home.playDesc') }}</p>
-          <span class="inline-block mt-1.5 text-[0.55rem] font-medium text-amber-600 bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 rounded-full">3 {{ t('home.elements') || 'juegos' }}</span>
+          <span class="inline-block mt-1.5 text-[0.55rem] font-medium text-amber-600 bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 rounded-full">7 {{ t('home.elements') }}</span>
         </div>
       </button>
     </div>
@@ -121,7 +121,7 @@ const studiedCount = computed(() => progress.value.studiedElements.length)
 
     <!-- Studied counter -->
     <div v-motion :initial="{ y: 20, opacity: 0 }" :visible="{ y: 0, opacity: 1 }" :duration="400" :delay="500" class="text-center">
-      <p class="text-[0.65rem] text-slate-400">{{ studiedCount }}/118 {{ t('home.elements') }} {{ t('home.learnDesc') }}</p>
+      <p class="text-[0.65rem] text-slate-400">{{ studiedCount }}/118 {{ t('home.elements') }} {{ t('home.explored') || 'explorados' }}</p>
     </div>
   </div>
 </template>
