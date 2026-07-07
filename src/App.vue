@@ -64,9 +64,9 @@ function closeNav() {
             <select :value="currentLocale" @change="setLocale(($event.target as HTMLSelectElement).value)"
               class="appearance-none bg-transparent text-xs font-medium text-slate-500 dark:text-slate-400 py-1.5 px-1.5 pr-5 rounded-lg cursor-pointer hover:text-slate-700 dark:hover:text-slate-200 focus-visible:outline-2 focus-visible:outline-mint-500 transition-colors"
               :aria-label="$t('common.languageSelect')">
-              <option value="es" :selected="currentLocale === 'es'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">🇪🇸 ES</option>
-              <option value="ca" :selected="currentLocale === 'ca'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">🏴󠁥󠁳󠁴󠁿 CA</option>
-              <option value="en" :selected="currentLocale === 'en'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">🇬🇧 EN</option>
+              <option value="es" :selected="currentLocale === 'es'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">ES</option>
+              <option value="ca" :selected="currentLocale === 'ca'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">CA</option>
+              <option value="en" :selected="currentLocale === 'en'" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">EN</option>
             </select>
           </div>
           <!-- Mobile hamburger -->
