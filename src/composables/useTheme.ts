@@ -1,7 +1,7 @@
 import { ref, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 
-const isDark = useLocalStorage('theme-dark', window.matchMedia('(prefers-color-scheme: dark)').matches)
+const isDark = useLocalStorage('theme-dark', false)
 
 export function useTheme() {
   const applyTheme = () => {
