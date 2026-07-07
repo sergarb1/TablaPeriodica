@@ -8,14 +8,27 @@ const { setLocale, currentLocale } = useLocale()
 const logoUrl = computed(() => import.meta.env.BASE_URL + 'logo.png')
 const isNavOpen = ref(false)
 
+const icons: Record<string, string> = {
+  grid: 'M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z',
+  trending: 'M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941',
+  book: 'M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25',
+  gamepad: 'M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z',
+  compass: 'M16.712 4.33a9.027 9.027 0 011.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 00-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 010 9.424m-4.138-5.976a3.736 3.736 0 00-.88-1.388 3.737 3.737 0 00-1.388-.88m2.268 2.268a3.765 3.765 0 010 2.528m-2.268-4.796l-3.448 4.138m0 0a9.027 9.027 0 01-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0l-4.138 3.448m0 0a9.014 9.014 0 009.424 0m-9.424 0a9.027 9.027 0 01-1.306-1.652 9.027 9.027 0 01-1.306-1.652m0 0l3.448-4.138m-3.448 4.138a9.014 9.014 0 010-9.424',
+  trophy: 'M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-2.77.896m0 0a6.022 6.022 0 01-2.77-.896',
+}
+
 const navLinks = [
-  { to: '/table', label: 'app.tableLabel' },
-  { to: '/trends', label: 'app.trends' },
-  { to: '/learn', label: 'app.learn' },
-  { to: '/games', label: 'app.play' },
-  { to: '/guide', label: 'app.guide' },
-  { to: '/progress', label: 'app.progress' },
+  { to: '/table', label: 'app.tableLabel', icon: 'grid' },
+  { to: '/trends', label: 'app.trends', icon: 'trending' },
+  { to: '/learn', label: 'app.learn', icon: 'book' },
+  { to: '/games', label: 'app.play', icon: 'gamepad' },
+  { to: '/guide', label: 'app.guide', icon: 'compass' },
+  { to: '/progress', label: 'app.progress', icon: 'trophy' },
 ]
+
+function iconPath(name: string): string {
+  return icons[name] || icons.grid
+}
 
 function closeNav() {
   isNavOpen.value = false
@@ -36,7 +49,8 @@ function closeNav() {
 
         <!-- Desktop nav -->
         <nav class="hidden sm:flex items-center gap-1" aria-label="{{ $t('common.mainNav') }}">
-          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="px-2 sm:px-3 py-2 text-xs sm:text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
+          <router-link v-for="link in navLinks" :key="link.to" :to="link.to" class="flex items-center gap-1.5 px-2 sm:px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path :d="iconPath(link.icon)" /></svg>
             {{ $t(link.label) }}
           </router-link>
         </nav>
@@ -65,7 +79,8 @@ function closeNav() {
       <transition name="slide-down">
         <div v-if="isNavOpen" class="sm:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-lg" role="navigation" :aria-label="$t('common.mainNav')">
           <div class="px-4 py-3 flex flex-col gap-1">
-            <router-link v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeNav" class="px-3 py-3 text-sm rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
+            <router-link v-for="link in navLinks" :key="link.to" :to="link.to" @click="closeNav" class="flex items-center gap-2 px-3 py-3 text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 bg-mint-100 dark:bg-slate-800 hover:bg-mint-200 dark:hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-mint-500 active:bg-mint-300 dark:active:bg-slate-600 transition-colors">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path :d="iconPath(link.icon)" /></svg>
               {{ $t(link.label) }}
             </router-link>
           </div>
